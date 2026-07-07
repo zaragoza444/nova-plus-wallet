@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signet — Product-First Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+  .gradient-text { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; transition: all 0.2s; }
+  .card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .stat { font-feature-settings: "tnum"; }
+</style>
+</head>
+<body class="bg-[#0d1117] text-white">
+
+<!-- Minimal Nav -->
+<nav class="border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center text-[10px] font-bold">S</div>
+      <span class="font-semibold">Signet</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="#" class="text-sm text-white/40 hover:text-white transition px-3 py-1.5">Features</a>
+      <a href="#" class="text-sm text-white/40 hover:text-white transition px-3 py-1.5">Chains</a>
+      <a href="#" class="text-sm text-white/40 hover:text-white transition px-3 py-1.5">Tokens</a>
+      <button class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-black text-sm font-medium rounded-lg transition">Launch</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero — Product First -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-xs mb-6">
+          v1.0 — Now live
+        </div>
+        <h1 class="text-5xl font-bold tracking-tight mb-4">
+          Your <span class="gradient-text">multi-chain</span> wallet for AnakaChain
+        </h1>
+        <p class="text-white/40 text-lg mb-8 leading-relaxed">
+          Connect, transact, and bridge across all 7 AnakaChain chains. 
+          One interface for settlement, assets, e-money, and crypto.
+        </p>
+        <div class="flex flex-wrap gap-3 mb-10">
+          <button class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-xl transition">Launch Wallet</button>
+          <button class="px-6 py-3 border border-white/10 hover:border-white/30 text-white/60 rounded-xl transition">Connect MetaMask</button>
+        </div>
+        <div class="flex items-center gap-8 text-sm">
+          <div><span class="text-white font-semibold">7</span> <span class="text-white/30">chains</span></div>
+          <div><span class="text-white font-semibold">15+</span> <span class="text-white/30">tokens</span></div>
+          <div><span class="text-white font-semibold">$0</span> <span class="text-white/30">gas on mesh</span></div>
+        </div>
+      </div>
+      <!-- Product Preview -->
+      <div class="relative">
+        <div class="card p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-medium text-white/60">Portfolio</h3>
+            <span class="text-xs text-white/30">Chain: Settlement</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-sm">₿</span>
+                <div><div class="text-sm font-medium">wBTC</div><div class="text-xs text-white/30">0.042 BTC</div></div>
+              </div>
+              <div class="text-right"><div class="text-sm font-mono">$4,116</div><div class="text-xs text-green-400">+2.3%</div></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-sm">Ξ</span>
+                <div><div class="text-sm font-medium">wETH</div><div class="text-xs text-white/30">1.5 ETH</div></div>
+              </div>
+              <div class="text-right"><div class="text-sm font-mono">$4,800</div><div class="text-xs text-red-400">-0.8%</div></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-sm">$</span>
+                <div><div class="text-sm font-medium">emUSD</div><div class="text-xs text-white/30">5,000 USD</div></div>
+              </div>
+              <div class="text-right"><div class="text-sm font-mono">$5,000</div><div class="text-xs text-white/30">Stable</div></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition cursor-pointer">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-sm">A</span>
+                <div><div class="text-sm font-medium">AnA</div><div class="text-xs text-white/30">1,250 ANA</div></div>
+              </div>
+              <div class="text-right"><div class="text-sm font-mono">$150</div><div class="text-xs text-green-400">+0.5%</div></div>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/5 flex justify-between text-xs text-white/30">
+            <span>Total: <span class="text-white font-semibold">$14,066</span></span>
+            <span>Updated live</span>
+          </div>
+        </div>
+        <div class="absolute -bottom-4 -right-4 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px] -z-10"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-20 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-2xl font-bold mb-2">Everything you need</h2>
+    <p class="text-white/40 mb-12">Built for the AnakaChain banking mesh.</p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card p-6">
+        <div class="text-2xl mb-4">🔗</div>
+        <h3 class="font-semibold mb-2">Multi-Chain</h3>
+        <p class="text-sm text-white/40">All 7 chains in one wallet. Switch between Settlement, Assets, Bridge, and more.</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-2xl mb-4">🌉</div>
+        <h3 class="font-semibold mb-2">Bridge</h3>
+        <p class="text-sm text-white/40">Move tokens between chains instantly. wBTC on Settlement → wBTC on Bridge.</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-2xl mb-4">🛡️</div>
+        <h3 class="font-semibold mb-2">FAFO Protected</h3>
+        <p class="text-sm text-white/40">Every transaction checked against the FAFO compliance protocol.</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-2xl mb-4">💱</div>
+        <h3 class="font-semibold mb-2">E-Money</h3>
+        <p class="text-sm text-white/40">Regulated e-money tokens: emUSD, emEUR, emGBP, emAUD. Licensed and compliant.</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-2xl mb-4">📊</div>
+        <h3 class="font-semibold mb-2">Live Pricing</h3>
+        <p class="text-sm text-white/40">Real-time oracle prices for all tokens. Always know your portfolio value.</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-2xl mb-4">🔑</div>
+        <h3 class="font-semibold mb-2">Self-Custody</h3>
+        <p class="text-sm text-white/40">Your keys, your assets. No third-party custody. No tracking. No analytics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Token Table -->
+<section class="py-20 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold">Token Showcase</h2>
+        <p class="text-white/40 text-sm mt-1">All tokens compliance-grade with FAFO protection.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="px-3 py-1.5 bg-white/5 rounded-lg text-xs text-white/60 hover:text-white transition">All</button>
+        <button class="px-3 py-1.5 rounded-lg text-xs text-white/30 hover:text-white transition">Crypto</button>
+        <button class="px-3 py-1.5 rounded-lg text-xs text-white/30 hover:text-white transition">E-Money</button>
+      </div>
+    </div>
+    <div class="card overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white/5 text-white/30">
+            <th class="text-left py-3 px-4 font-medium">Token</th>
+            <th class="text-left py-3 px-4 font-medium">Symbol</th>
+            <th class="text-right py-3 px-4 font-medium">Price</th>
+            <th class="text-right py-3 px-4 font-medium">24h</th>
+            <th class="text-right py-3 px-4 font-medium">Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-white/5 hover:bg-white/[0.02] cursor-pointer">
+            <td class="py-3 px-4"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center text-[10px]">₿</span>Wrapped BTC</div></td>
+            <td class="py-3 px-4 font-mono text-white/40">wBTC</td>
+            <td class="py-3 px-4 text-right font-mono">$98,000</td>
+            <td class="py-3 px-4 text-right text-green-400">+2.3%</td>
+            <td class="py-3 px-4 text-right"><span class="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-[10px]">Crypto</span></td>
+          </tr>
+          <tr class="border-b border-white/5 hover:bg-white/[0.02] cursor-pointer">
+            <td class="py-3 px-4"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px]">Ξ</span>Wrapped ETH</div></td>
+            <td class="py-3 px-4 font-mono text-white/40">wETH</td>
+            <td class="py-3 px-4 text-right font-mono">$3,200</td>
+            <td class="py-3 px-4 text-right text-red-400">-0.8%</td>
+            <td class="py-3 px-4 text-right"><span class="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-[10px]">Crypto</span></td>
+          </tr>
+          <tr class="border-b border-white/5 hover:bg-white/[0.02] cursor-pointer">
+            <td class="py-3 px-4"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px]">$</span>E-Money USD</div></td>
+            <td class="py-3 px-4 font-mono text-white/40">emUSD</td>
+            <td class="py-3 px-4 text-right font-mono">$1.00</td>
+            <td class="py-3 px-4 text-right text-white/30">—</td>
+            <td class="py-3 px-4 text-right"><span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded text-[10px]">E-Money</span></td>
+          </tr>
+          <tr class="hover:bg-white/[0.02] cursor-pointer">
+            <td class="py-3 px-4"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-[10px]">A</span>AnA Settlement</div></td>
+            <td class="py-3 px-4 font-mono text-white/40">AnA</td>
+            <td class="py-3 px-4 text-right font-mono">$0.12</td>
+            <td class="py-3 px-4 text-right text-green-400">+0.5%</td>
+            <td class="py-3 px-4 text-right"><span class="px-2 py-0.5 bg-purple-500/10 text-purple-400 rounded text-[10px]">Native</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="card p-12 text-center">
+      <h2 class="text-3xl font-bold mb-3">Start using Signet</h2>
+      <p class="text-white/40 mb-8 max-w-lg mx-auto">No email. No KYC. No data collection. Just you and your keys.</p>
+      <div class="flex justify-center gap-3">
+        <button class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-xl transition">Launch Wallet</button>
+        <button class="px-6 py-3 border border-white/10 hover:border-white/30 text-white/60 rounded-xl transition">Read the Docs</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 py-8">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-xs text-white/20">
+    <span>Signet — AnakaChain Wallet</span>
+    <div class="flex gap-4">
+      <a href="#" class="hover:text-white/40 transition">Docs</a>
+      <a href="#" class="hover:text-white/40 transition">GitHub</a>
+      <a href="#" class="hover:text-white/40 transition">Explorer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

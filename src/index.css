@@ -1,0 +1,309 @@
+@import "./brand/fonts.css";
+@import "./brand/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Deep obsidian base */
+    --color-bg: #08080C;
+    --color-bg-alt: #0C0C12;
+    --color-surface: #111118;
+    --color-surface-raised: #181820;
+    --color-surface-glass: rgba(17, 17, 24, 0.7);
+
+    /* Borders */
+    --color-border: rgba(255, 255, 255, 0.06);
+    --color-border-strong: rgba(255, 255, 255, 0.10);
+    --color-border-glow: rgba(201, 168, 76, 0.15);
+
+    /* Signet Gold — warm, antique, never bright */
+    --color-gold: #C9A84C;
+    --color-gold-light: #D4B860;
+    --color-gold-bright: #E8D48B;
+    --color-gold-muted: #8A7642;
+    --color-gold-dim: #5A4E2E;
+
+    /* Gold gradient stops */
+    --gold-gradient: linear-gradient(135deg, #C9A84C 0%, #E8D48B 50%, #C9A84C 100%);
+    --gold-gradient-subtle: linear-gradient(135deg, rgba(201, 168, 76, 0.12) 0%, rgba(232, 212, 139, 0.06) 100%);
+
+    /* Text */
+    --color-ink: #F0EFEA;
+    --color-ink-muted: #8A8980;
+    --color-ink-dim: #5A5955;
+
+    /* Semantic */
+    --color-wax-red: #C0392B;
+    --color-wax-red-soft: rgba(192, 57, 43, 0.12);
+    --color-verdant: #3D8B6E;
+    --color-verdant-soft: rgba(61, 139, 110, 0.12);
+    --color-warning: #D4A843;
+    --color-warning-soft: rgba(212, 168, 67, 0.12);
+
+    /* Accent blues for variety */
+    --color-accent-blue: #5B8DEF;
+    --color-accent-purple: #8B5CF6;
+    --color-accent-teal: #2DD4BF;
+
+    /* Burgundy — institutional accent */
+    --color-burgundy: #8C2A3E;
+    --color-burgundy-bright: #B23A54;
+    --color-burgundy-dark: #5E1A29;
+    --color-burgundy-soft: rgba(140, 42, 62, 0.12);
+    --color-burgundy-muted: rgba(140, 42, 62, 0.45);
+  }
+}
+
+/* ── Animations ── */
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(201, 168, 76, 0.08); }
+  50% { box-shadow: 0 0 40px rgba(201, 168, 76, 0.18); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  30% { transform: translate(3%, 7%); }
+  50% { transform: translate(-2%, 5%); }
+  70% { transform: translate(4%, -3%); }
+  90% { transform: translate(-1%, 2%); }
+}
+
+@keyframes gold-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes gold-text-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.reveal { animation: reveal 400ms cubic-bezier(0, 0, 0.2, 1) both; }
+.reveal-1 { animation-delay: 0ms; }
+.reveal-2 { animation-delay: 60ms; }
+.reveal-3 { animation-delay: 120ms; }
+.reveal-4 { animation-delay: 180ms; }
+.reveal-5 { animation-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-1, .reveal-2, .reveal-3, .reveal-4, .reveal-5 {
+    animation: none !important;
+  }
+  .portfolio-anchor,
+  .portfolio-anchor-shimmer,
+  .portfolio-value,
+  .skeleton {
+    animation: none !important;
+  }
+}
+
+/* ── Portfolio anchor (gold gradient motion) ── */
+.portfolio-anchor {
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(201, 168, 76, 0.1) 0%,
+    rgba(17, 17, 24, 0.85) 45%,
+    rgba(232, 212, 139, 0.06) 100%
+  );
+  background-size: 200% 200%;
+  animation: gold-flow 10s ease-in-out infinite;
+}
+
+.portfolio-anchor-shimmer {
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(201, 168, 76, 0.12) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+.portfolio-value {
+  background: var(--gold-gradient);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-text-shimmer 8s ease-in-out infinite;
+}
+
+/* ── Page rhythm ── */
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-bg);
+  background: var(--gold-gradient);
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+/* ── Glass card ── */
+.glass-card {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+
+.glass-card-glow {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border-glow);
+  border-radius: 16px;
+}
+
+/* ── Gold text gradient ── */
+.gold-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Grain overlay ── */
+.grain-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+/* ── Shimmer skeleton ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-raised) 50%, var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ── Base resets ── */
+html, body {
+  height: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body, "Inter", system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, "Space Grotesk", "Inter", system-ui, sans-serif);
+}
+
+.font-display {
+  font-family: var(--font-display, "Playfair Display", Georgia, serif);
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+* { box-sizing: border-box; }
+
+button, input, select, textarea { font: inherit; }
+
+@layer base {
+  input, select, textarea { font-size: 1rem; }
+}
+
+@media (min-width: 768px) {
+  input, select, textarea { font-size: inherit; }
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink-dim); }
+
+/* ── Tap target minimum ── */
+.tap-target { min-height: 44px; min-width: 44px; }
+
+/* ── Number formatting ── */
+.tabular-nums { font-variant-numeric: tabular-nums; }

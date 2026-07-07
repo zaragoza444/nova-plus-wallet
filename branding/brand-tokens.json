@@ -1,0 +1,29 @@
+{
+  "colors": {
+    "bg": "#08080C",
+    "bgAlt": "#0C0C12",
+    "surface": "#111118",
+    "surfaceRaised": "#181820",
+    "gold": "#C9A84C",
+    "goldLight": "#D4B860",
+    "goldBright": "#E8D48B",
+    "goldMuted": "#8A7642",
+    "goldDim": "#5A4E2E",
+    "ink": "#F0EFEA",
+    "inkMuted": "#8A8980",
+    "inkDim": "#5A5955",
+    "burgundy": "#8C2A3E",
+    "burgundyBright": "#B23A54",
+    "burgundyDark": "#5E1A29"
+  },
+  "fonts": {
+    "display": "Playfair Display",
+    "heading": "Space Grotesk",
+    "body": "Inter",
+    "mono": "JetBrains Mono"
+  },
+  "copy": {
+    "tagline": "Self-custody wallet for Nova Bank and the Nova mesh",
+    "productName": "Nova Plus Wallet"
+  }
+}

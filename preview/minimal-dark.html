@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signet — Minimal Fintech</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; background: #030712; }
+  .gradient-border { position: relative; }
+  .gradient-border::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.05)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .fade-in { animation: fadeIn 0.6s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="text-white">
+
+<!-- Nav -->
+<nav class="fixed top-0 w-full z-50 bg-[#030712]/90 backdrop-blur-lg">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="url(#sg)"/>
+        <text x="14" y="19" text-anchor="middle" fill="black" font-size="14" font-weight="700" font-family="Inter">S</text>
+        <defs><linearGradient id="sg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs>
+      </svg>
+      <span class="font-semibold text-sm tracking-tight">Signet</span>
+    </div>
+    <div class="hidden md:flex items-center gap-6 text-sm text-zinc-400">
+      <a href="#" class="hover:text-white transition">Features</a>
+      <a href="#" class="hover:text-white transition">Chains</a>
+      <a href="#" class="hover:text-white transition">Tokens</a>
+      <a href="#" class="hover:text-white transition">Docs</a>
+    </div>
+    <button class="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-zinc-200 transition">Launch App</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="min-h-screen flex items-center pt-16">
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    <div class="max-w-2xl fade-in">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded-full text-zinc-400 text-xs mb-8 border border-zinc-700/50">
+        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
+        Live on AnakaChain
+      </div>
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
+        The wallet for<br>
+        <span class="text-amber-400">sovereign finance</span>
+      </h1>
+      <p class="text-zinc-500 text-lg mb-10 max-w-xl leading-relaxed">
+        Signet connects you to the AnakaChain banking mesh. 
+        One wallet for settlement, assets, e-money, and crypto — 
+        with institutional-grade compliance built in.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <button class="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-black font-medium rounded-lg transition">Launch Wallet</button>
+        <button class="px-6 py-3 border border-zinc-800 hover:border-zinc-600 text-zinc-400 rounded-lg transition">Connect MetaMask</button>
+      </div>
+      <div class="flex items-center gap-6 mt-10 text-xs text-zinc-600">
+        <span>7 chains</span>
+        <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+        <span>15+ tokens</span>
+        <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+        <span>FAFO protected</span>
+        <span class="w-1 h-1 bg-zinc-700 rounded-full"></span>
+        <span>Zero tracking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="border-t border-zinc-800/50">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div>
+        <div class="text-2xl font-bold text-amber-400">7</div>
+        <div class="text-xs text-zinc-500 mt-1">Chains supported</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-amber-400">15+</div>
+        <div class="text-xs text-zinc-500 mt-1">Tokens live</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-amber-400">$0</div>
+        <div class="text-xs text-zinc-500 mt-1">Gas on mesh</div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-amber-400">100%</div>
+        <div class="text-xs text-zinc-500 mt-1">Self-custody</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-3 gap-px bg-zinc-800/30 rounded-2xl overflow-hidden">
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">Multi-Chain</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Settlement, Assets, Bridge, Sovereign, Enclave, Consumer, Nova — all from one interface.</p>
+      </div>
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">Bridge</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Move tokens between chains instantly. Cross-chain transfers with FAFO enforcement.</p>
+      </div>
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">E-Money</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Regulated e-money tokens: emUSD, emEUR, emGBP, emAUD. Licensed and compliant.</p>
+      </div>
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">Live Oracle</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Real-time pricing from the AnakaChain Oracle. Always know your portfolio value.</p>
+      </div>
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">FAFO</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Every transaction checked against the compliance protocol. Mesh-wide enforcement.</p>
+      </div>
+      <div class="bg-[#030712] p-8">
+        <div class="text-amber-400 text-sm font-medium mb-3">Sovereign</div>
+        <p class="text-zinc-400 text-sm leading-relaxed">Your keys. Your identity. Your rules. No third-party custody or tracking.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Token Grid -->
+<section class="py-20 border-t border-zinc-800/50">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between mb-10">
+      <div>
+        <h2 class="text-2xl font-bold">Tokens</h2>
+        <p class="text-zinc-500 text-sm mt-1">Compliance-grade with FAFO protection.</p>
+      </div>
+      <div class="flex gap-2">
+        <span class="px-3 py-1 bg-zinc-800 rounded-full text-xs text-zinc-400">All</span>
+        <span class="px-3 py-1 rounded-full text-xs text-zinc-600">Crypto</span>
+        <span class="px-3 py-1 rounded-full text-xs text-zinc-600">E-Money</span>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div class="p-4 rounded-xl bg-zinc-800/30 border border-zinc-800/50 hover:border-zinc-700/50 transition cursor-pointer">
+        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center text-[10px]">₿</span><span class="text-sm font-medium">wBTC</span></div>
+        <div class="text-xs text-zinc-500">$98,000</div>
+      </div>
+      <div class="p-4 rounded-xl bg-zinc-800/30 border border-zinc-800/50 hover:border-zinc-700/50 transition cursor-pointer">
+        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px]">Ξ</span><span class="text-sm font-medium">wETH</span></div>
+        <div class="text-xs text-zinc-500">$3,200</div>
+      </div>
+      <div class="p-4 rounded-xl bg-zinc-800/30 border border-zinc-800/50 hover:border-zinc-700/50 transition cursor-pointer">
+        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px]">$</span><span class="text-sm font-medium">emUSD</span></div>
+        <div class="text-xs text-zinc-500">$1.00</div>
+      </div>
+      <div class="p-4 rounded-xl bg-zinc-800/30 border border-zinc-800/50 hover:border-zinc-700/50 transition cursor-pointer">
+        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-[10px]">A</span><span class="text-sm font-medium">AnA</span></div>
+        <div class="text-xs text-zinc-500">$0.12</div>
+      </div>
+      <div class="p-4 rounded-xl bg-zinc-800/30 border border-zinc-800/50 hover:border-zinc-700/50 transition cursor-pointer">
+        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-full bg-sky-500/20 flex items-center justify-center text-[10px]">€</span><span class="text-sm font-medium">emEUR</span></div>
+        <div class="text-xs text-zinc-500">$1.08</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="p-12 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 text-center">
+      <h2 class="text-3xl font-bold mb-3">Start using Signet</h2>
+      <p class="text-zinc-500 mb-8 max-w-md mx-auto">No email. No KYC. No data collection. Just you and your keys.</p>
+      <button class="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-black font-medium rounded-lg transition">Launch Wallet</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-zinc-800/50 py-8">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between text-xs text-zinc-600">
+    <span>Signet — AnakaChain Wallet</span>
+    <div class="flex gap-4">
+      <a href="#" class="hover:text-zinc-400 transition">Docs</a>
+      <a href="#" class="hover:text-zinc-400 transition">GitHub</a>
+      <a href="#" class="hover:text-zinc-400 transition">Explorer</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

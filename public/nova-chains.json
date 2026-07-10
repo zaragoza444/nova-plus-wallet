@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "exportedAt": "2026-07-07T09:29:01.753Z",
+  "exportedAt": "2026-07-10T08:01:35.882Z",
   "chains": [
     {
       "chainId": 22016,
@@ -146,11 +146,11 @@
         {
           "symbol": "USDT",
           "name": "Tether USD",
-          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "address": "0x0000000000000000000000000000000000000000",
           "decimals": 6,
           "native": true,
           "verified": true,
-          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x015b1897ed5279930bc2be46f661894d219292a6/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -489,6 +489,19 @@
           "native": true,
           "verified": true,
           "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0xc2cee6993c227af36b4d83452499313ea5427b32/logo.png",
+          "tradable": true,
+          "swappable": true,
+          "transferable": true,
+          "ledgerOnly": false
+        },
+        {
+          "symbol": "USDT-LEGACY",
+          "name": "USD Token (Legacy)",
+          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "decimals": 18,
+          "native": true,
+          "verified": true,
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -638,7 +651,7 @@
       "name": "Nova Production Node",
       "nativeSymbol": "NOVA",
       "rpcUrls": [
-        "http://51.75.64.28/rpc",
+        "https://novablockchainsystem.com/rpc",
         "http://51.75.64.28:28545/rpc"
       ],
       "explorerUrl": "http://51.75.64.28:28545/explorer",
@@ -776,11 +789,11 @@
         {
           "symbol": "USDT",
           "name": "Tether USD",
-          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "address": "0x0000000000000000000000000000000000000000",
           "decimals": 6,
           "native": true,
           "verified": true,
-          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x015b1897ed5279930bc2be46f661894d219292a6/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -1119,6 +1132,19 @@
           "native": true,
           "verified": true,
           "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0xc2cee6993c227af36b4d83452499313ea5427b32/logo.png",
+          "tradable": true,
+          "swappable": true,
+          "transferable": true,
+          "ledgerOnly": false
+        },
+        {
+          "symbol": "USDT-LEGACY",
+          "name": "USD Token (Legacy)",
+          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "decimals": 18,
+          "native": true,
+          "verified": true,
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -1406,11 +1432,11 @@
         {
           "symbol": "USDT",
           "name": "Tether USD",
-          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "address": "0x0000000000000000000000000000000000000000",
           "decimals": 6,
           "native": true,
           "verified": true,
-          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x015b1897ed5279930bc2be46f661894d219292a6/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -1749,6 +1775,19 @@
           "native": true,
           "verified": true,
           "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0xc2cee6993c227af36b4d83452499313ea5427b32/logo.png",
+          "tradable": true,
+          "swappable": true,
+          "transferable": true,
+          "ledgerOnly": false
+        },
+        {
+          "symbol": "USDT-LEGACY",
+          "name": "USD Token (Legacy)",
+          "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
+          "decimals": 18,
+          "native": true,
+          "verified": true,
+          "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
           "tradable": true,
           "swappable": true,
           "transferable": true,
@@ -2138,8 +2177,7 @@
           "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x66d8efa0af63b0e84eb1dd72bf00f00cd1e2234e/logo.png",
           "aliases": [
             "NSB",
-            "NSB-AUSDT",
-            "USDT"
+            "NSB-AUSDT"
           ],
           "tradable": true,
           "swappable": true,
@@ -2247,14 +2285,15 @@
           "ledgerOnly": false
         },
         {
-          "symbol": "USDT",
-          "name": "USD Token",
+          "symbol": "USDT-LEGACY",
+          "name": "USD Token (Legacy)",
           "address": "0x70a38a336f7f857975452a19b81e87321e262aeb",
           "decimals": 18,
           "verified": true,
           "logoURI": "https://raw.githubusercontent.com/lloydgalley/AlltraAssets/main/blockchains/all/assets/0x70a38a336f7f857975452a19b81e87321e262aeb/logo.png",
           "aliases": [
-            "USDT-legacy"
+            "USDT-legacy",
+            "USDT_LEGACY"
           ],
           "tradable": true,
           "swappable": true,

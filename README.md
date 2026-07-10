@@ -1,53 +1,23 @@
-# Nova Plus Wallet
+﻿# Nova Plus Wallet
 
-Self-custody web wallet for **NovaONE** (22016), **NRW World** (33001), and **ALLTRA** (651940).
+Self-custody chain wallet SPA for the Nova Bank mesh (Signet fork).
 
-Forked from [Signet Wallet](https://github.com/TorNation01/sigent-old-v1) and wired to the Nova Bank production mesh at `novablockchainsystem.com`.
+Live: https://novablockchainsystem.com/wallet/
 
-## Quick start
+## Chains
 
-```bash
-npm ci
-npm run dev
-```
+- NovaONE (22016) - https://novablockchainsystem.com/novaone-rpc/
+- NRW World, ALLTRA, ecosystem tokens via nova-chains.json
 
-Open http://localhost:5173
+## Build from Nova monorepo
 
-## Build
+    cd ../nova
+    npm run nova-plus:deploy -- -CopyToSiblingRepo
 
-```bash
-npm run typecheck
-npm run build
-```
+## VPS deploy
 
-Output: `dist/`
+    npm run nova-plus:deploy
 
-## Chain registry
+Served from /var/www/nova-plus-wallet (nginx location /wallet/).
 
-Bundled `public/nova-chains.json` is exported from the Nova monorepo:
-
-```bash
-# In ../nova
-npm run signet:export-chains
-cp reference/signet-wallet/generated/nova-chains.json ../nova-plus-wallet/public/
-```
-
-## Deploy (VPS)
-
-```powershell
-# Build + upload to novablockchainsystem.com/wallet/
-.\scripts\deploy.ps1
-```
-
-Or serve `dist/` behind nginx at `/wallet/` on `51.75.64.28`.
-
-## Live URLs (after deploy)
-
-- http://51.75.64.28/wallet/
-- https://novablockchainsystem.com/wallet/
-
-## Nova monorepo
-
-Signet edge (interim): `npm run signet:deploy` in [novatrusty2-ops/nova](https://github.com/novatrusty2-ops/nova) deploys `@nova/swap` to `/signet/`.
-
-This repo is the **full Signet-style wallet** (17 pages, keystore, bridge, swap) rebranded as Nova Plus Wallet.
+Source: @nova/swap in the Nova monorepo (github.com/zaragoza444/nova).

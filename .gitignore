@@ -1,6 +1,3 @@
-node_modules/
-dist/
+﻿node_modules/
 .DS_Store
 *.local
-.env
-.env.*

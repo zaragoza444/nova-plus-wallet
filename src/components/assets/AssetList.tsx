@@ -13,7 +13,7 @@ const ASSET_SYMBOLS = new Set(["ATKSH", "PROP", "AGAS", "AnA"]);
 
 export function AssetList(): JSX.Element {
   const { address } = useWalletContext();
-  const { tokenRows, loading, error, refresh } = useVisibleTokenRows(address, 15_000);
+  const { tokenRows, loading, error, refresh } = useVisibleTokenRows(address ?? undefined, 15_000);
 
   const assetRows = tokenRows.filter(
     (r) => ASSET_SYMBOLS.has(r.token.symbol) && BigInt(r.balance) > 0n,

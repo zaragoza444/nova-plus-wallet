@@ -143,7 +143,7 @@ async function estimateFee(
 
 export function userFacingTransferError(err: unknown): string {
   if (typeof err === "object" && err !== null) {
-    const code = (err as { code?: string }).code;
+    const code = (err as { code?: string | number }).code;
     if (code === "ACTION_REJECTED" || code === 4001) {
       return "Transaction cancelled.";
     }

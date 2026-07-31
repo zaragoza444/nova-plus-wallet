@@ -64,7 +64,7 @@ export function SendPage(): JSX.Element {
   const { address } = useWalletContext();
   const { pushToast } = useToast();
   const [searchParams] = useSearchParams();
-  const { tokenRows, loading, error, refresh } = useVisibleTokenRows(address, 15_000);
+  const { tokenRows, loading, error, refresh } = useVisibleTokenRows(address ?? undefined, 15_000);
   const { estimate, sendTransfer, phase } = useTokenTransfer();
 
   const [selected, setSelected] = useState<TokenBalanceRow | null>(null);

@@ -130,12 +130,13 @@ export function wipeAccounts(): void {
 }
 
 export function walletSupportsHdAccounts(wallet: AnyWallet): boolean {
-  return Boolean(wallet.mnemonic?.phrase);
+  return wallet instanceof HDNodeWallet && Boolean(wallet.mnemonic?.phrase);
 }
 
 /** BIP44 Ethereum path — account index 0 is the default first address. */
 export function deriveAccountAtIndex(root: AnyWallet, index: number): AnyWallet {
-  const phrase = root.mnemonic?.phrase;
+  const mnemonic = root instanceof HDNodeWallet ? root.mnemonic : null;
+  const phrase = mnemonic?.phrase;
   if (!phrase) {
     if (index !== 0) {
       throw new Error("Multi-account requires a wallet created from a recovery phrase.");
@@ -143,7 +144,7 @@ export function deriveAccountAtIndex(root: AnyWallet, index: number): AnyWallet 
     return root;
   }
   const path = `m/44'/60'/0'/0/${index}`;
-  const opts = root.mnemonic as Mnemonic | undefined;
+  const opts = mnemonic as Mnemonic | null;
   return HDNodeWallet.fromPhrase(phrase, opts?.password, path);
 }
 

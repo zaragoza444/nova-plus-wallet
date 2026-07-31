@@ -40,7 +40,7 @@ async function pingRpc(provider: JsonRpcProvider): Promise<boolean> {
   }
 }
 
-type PendingRow = Omit<TokenBalanceRow, "usdEstimate"> & {
+type PendingRow = TokenBalanceRow & {
   price: PriceResolveInput;
   /** Registry / list / user — used for spam filter. */
   isKnownToken: boolean;
@@ -152,6 +152,7 @@ async function readChain(chain: ChainDef, address: string): Promise<ChainReadRes
         chainName: chain.name,
         balance: bal.toString(),
         formatted: fmt(human, nc.symbol),
+        usdEstimate: 0,
         price: { symbol: nc.symbol, units: human, usd: nc.usd, coingeckoId: nc.coingeckoId },
         isKnownToken: true,
       };
@@ -178,6 +179,7 @@ async function readChain(chain: ChainDef, address: string): Promise<ChainReadRes
           chainName: chain.name,
           balance: bal.toString(),
           formatted: fmt(human, t.symbol),
+          usdEstimate: 0,
           price: {
             symbol: t.symbol,
             units: human,

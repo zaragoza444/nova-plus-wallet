@@ -11,6 +11,8 @@ import { isPrivateUnlocked, subscribePrivateAccessChanged } from "./privateAcces
 import { getCachedWorldChains, loadWorldChains, notifyWorldChainsReady, subscribeWorldChainsReady } from "./worldchains";
 import { JsonRpcProvider } from "ethers";
 
+export type { ChainDef } from "./chains";
+
 export const ENABLED_KEY = "signet.networks.v1";
 export const USER_CHAINS_KEY = "signet.userchains.v1";
 

@@ -12,7 +12,7 @@ import { brand } from "../../lib/brand";
 
 export function Header(): JSX.Element {
   const { address, mode, isInstitutional, gateUnlocked } = useWalletContext();
-  const fafo = useFAFO(address, 45_000);
+  const fafo = useFAFO(address ?? undefined, 45_000);
 
   return (
     <header className="sticky top-0 z-40 border-b border-signet-border bg-signet-bg/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">

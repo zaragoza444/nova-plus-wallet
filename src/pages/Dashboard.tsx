@@ -85,11 +85,11 @@ function ChainDot({ name, status }: { name: string; status: "ok" | "unavailable"
 export function Dashboard(): JSX.Element {
   const { address } = useWalletContext();
   const { displayCurrency } = useDisplaySettings();
-  const { tokenRows, visibleTotalUsd, loading, chainStatus, error, refresh } = useVisibleTokenRows(
-    address,
+  const { tokenRows, totalUsd, loading, chainStatus, error, refresh } = useVisibleTokenRows(
+    address ?? undefined,
     15_000,
   );
-  const fafo = useFAFO(address, 45_000);
+  const fafo = useFAFO(address ?? undefined, 45_000);
 
   const sortedTokens = useMemo(
     () => [...tokenRows].sort((a, b) => (b.usdEstimate ?? -1) - (a.usdEstimate ?? -1)),
@@ -118,7 +118,7 @@ export function Dashboard(): JSX.Element {
       )}
 
       <PortfolioAnchor
-        totalUsd={visibleTotalUsd}
+        totalUsd={totalUsd}
         displayCurrency={displayCurrency}
         loading={loading && !tokenRows.length}
       />

@@ -168,7 +168,7 @@ export async function revealMnemonicWithPassword(
   onProgress?: (p: number) => void,
 ): Promise<RevealSecretResult> {
   const wallet = await unlockVault(password, onProgress);
-  const phrase = wallet.mnemonic?.phrase?.trim();
+  const phrase = wallet instanceof HDNodeWallet ? wallet.mnemonic?.phrase?.trim() : undefined;
   if (phrase) return { kind: "mnemonic", phrase };
   return {
     kind: "no_mnemonic",
@@ -197,7 +197,7 @@ async function deriveAesKey(password: string, salt: Uint8Array): Promise<CryptoK
     "deriveKey",
   ]);
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations: 120_000, hash: "SHA-256" },
+    { name: "PBKDF2", salt: salt as BufferSource, iterations: 120_000, hash: "SHA-256" },
     keyMaterial,
     { name: "AES-GCM", length: 256 },
     false,
@@ -221,7 +221,7 @@ export async function encryptPrivateProfile(profile: PrivateProfile, password: s
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const key = await deriveAesKey(password, salt);
-  const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(JSON.stringify(profile)));
+  const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv as BufferSource }, key, enc.encode(JSON.stringify(profile)));
   const blob: EncryptedBlob = { v: 1, salt: toHex(salt), iv: toHex(iv), data: toHex(new Uint8Array(cipher)) };
   localStorage.setItem(PRIVATE_PROFILE_KEY, JSON.stringify(blob));
 }
@@ -233,9 +233,9 @@ export async function unlockPrivateProfile(password: string): Promise<PrivatePro
   if (blob.v !== 1) throw new Error("Unsupported private profile format.");
   const key = await deriveAesKey(password, fromHex(blob.salt));
   const plain = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv: fromHex(blob.iv) },
+    { name: "AES-GCM", iv: fromHex(blob.iv) as BufferSource },
     key,
-    fromHex(blob.data),
+    fromHex(blob.data) as BufferSource,
   );
   const profile = JSON.parse(new TextDecoder().decode(plain)) as PrivateProfile;
   if (!profile || typeof profile.institutional !== "boolean") {

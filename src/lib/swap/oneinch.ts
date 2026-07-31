@@ -1,6 +1,6 @@
 // Signet — 1inch v6 swap client. Reads VITE_1INCH_API_KEY; no key => disabled.
 import { getChain } from "../chains";
-import type { TokenConfig } from "../types";
+import type { TokenConfig } from "../../types";
 
 const KEY = (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_1INCH_API_KEY;
 const BASE = "https://api.1inch.dev/swap/v6.0";

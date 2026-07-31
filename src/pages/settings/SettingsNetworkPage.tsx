@@ -160,14 +160,14 @@ export function SettingsNetworkPage(): JSX.Element {
   const handleAddCustom = async () => {
     setFormError(null);
     const result = validateUserChainInput(form);
-    if (!result.ok) {
+    if (result.ok === false) {
       setFormError(result.message);
       return;
     }
     setValidating(true);
     const rpcCheck = await validateChainRpc(result.record.rpcUrl, result.record.id);
     setValidating(false);
-    if (!rpcCheck.ok) {
+    if (rpcCheck.ok === false) {
       setFormError(rpcCheck.message);
       return;
     }

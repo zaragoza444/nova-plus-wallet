@@ -7,6 +7,7 @@ export const paths = {
   receive: "/app/receive",
   swap: "/app/swap",
   more: "/app/more",
+  importWallet: "/app/import-wallet",
   settings: "/app/settings",
   settingsAccounts: "/app/settings/accounts",
   settingsGeneral: "/app/settings/general",

@@ -74,7 +74,7 @@ export function AssetDetail(): JSX.Element {
   const chainId = Number(chainIdParam);
   const symbol = symbolParam ?? "";
   const { address } = useWalletContext();
-  const { tokenRows, loading: balLoading } = useTokenBalances(address, 15_000);
+  const { tokenRows, loading: balLoading } = useTokenBalances(address ?? undefined, 15_000);
 
   const meta = useMemo(
     () => (Number.isFinite(chainId) && symbol ? resolveToken(chainId, symbol) : null),

@@ -99,9 +99,7 @@ function writeCachedChain(chainId: number, tokens: ListedToken[]): void {
   writeCacheBlob(blob);
 }
 
-function coingeckoFromExtensions(
-  ext: TokenListJson["tokens"] extends (infer T)[] | undefined ? T extends { extensions?: infer E } ? E : never : never,
-): string | undefined {
+function coingeckoFromExtensions(ext: unknown): string | undefined {
   if (!ext || typeof ext !== "object") return undefined;
   const e = ext as { coingeckoId?: string; coingecko?: { id?: string } };
   return e.coingeckoId ?? e.coingecko?.id;

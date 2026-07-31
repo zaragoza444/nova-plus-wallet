@@ -27,9 +27,9 @@ export function ConnectWallet({ children }: { children?: React.ReactNode }): JSX
         type="text"
         placeholder="0x..."
         style={{ padding: "10px 14px", borderRadius: 12, border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)", fontSize: 13, width: "100%", fontFamily: "var(--font-mono)", marginBottom: 12 }}
-        onKeyDown={(e) => { if (e.key === "Enter") connect((e.target as HTMLInputElement).value); }}
+        onKeyDown={(e) => { if (e.key === "Enter") connect(); }}
       />
-      <button className="btn-primary" style={{ width: "100%" }} onClick={() => {}}>
+      <button className="btn-primary" style={{ width: "100%" }} onClick={connect}>
         Connect
       </button>
     </div>

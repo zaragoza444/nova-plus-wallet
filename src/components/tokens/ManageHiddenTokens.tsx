@@ -19,7 +19,7 @@ export function ManageHiddenTokens(): JSX.Element {
   const { address } = useWalletContext();
   const prefs = usePrefs();
   const hiddenSet = useMemo(() => getHiddenTokenSet(prefs), [prefs]);
-  const { tokenRows } = useTokenBalances(address, 30_000);
+  const { tokenRows } = useTokenBalances(address ?? undefined, 30_000);
 
   const hiddenRows = useMemo(
     () => tokenRows.filter((r) => hiddenSet.has(balanceRowKey(r))),

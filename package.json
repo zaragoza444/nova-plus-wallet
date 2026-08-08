@@ -2,7 +2,7 @@
   "private": true,
   "name": "nova-plus-wallet",
   "version": "1.0.0",
-  "description": "Nova Plus Wallet - Signet fork SPA for NovaONE / NRW / ALLTRA (novablockchainsystem.com/wallet/)",
+  "description": "Nova Plus Wallet - self-custody wallet for NovaONE / NRW / ALLTRA at novabank.uk/wallet/",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5199 --host 127.0.0.1",

@@ -24,6 +24,7 @@ import {
   ONEINCH_CHAIN_IDS,
   unsupportedNetworkLabel,
 } from "../lib/swap/oneinch";
+import { globalSwapUrl, usesGlobalSwap } from "../lib/swap/globalSwap";
 import type { TokenConfig } from "../types";
 
 const SLIPPAGE_OPTS = [0.1, 0.5, 1] as const;
@@ -221,20 +222,32 @@ export function SwapPage(): JSX.Element {
       <PageHeader
         eyebrow="Swap"
         title="Swap tokens"
-        description="Live quotes and execution via 1inch on supported public EVM networks."
+        description="1inch on public EVM · Global Swap for popular ETH/BNB/TRX ↔ Nova/ALLTRA."
       />
       <AIInsight {...INSIGHTS.swap} className="reveal reveal-1" />
 
-      {walletUnsupported && (
-        <div className="rounded-2xl border border-signet-warning/40 bg-signet-warning/5 px-4 py-3 text-sm reveal reveal-1">
-          <p className="font-semibold text-signet-warning">Swap not on this network</p>
+      {(walletUnsupported || usesGlobalSwap(chainId)) && (
+        <div className="rounded-2xl border border-signet-gold/40 bg-signet-gold/5 px-4 py-3 text-sm reveal reveal-1">
+          <p className="font-semibold text-signet-gold">Nova / ALLTRA Global Swap</p>
           <p className="mt-1 text-signet-muted">
-            Your wallet network is {unsupportedNetworkLabel(chainId)}. 1inch swap is not available
-            there — use Bridge for mesh and partner chains.
+            {usesGlobalSwap(chainId)
+              ? `${unsupportedNetworkLabel(chainId)} trades popular ETH, BNB, and TRX hubs via ALLTRA Global Swap — not 1inch.`
+              : `Your wallet network is ${unsupportedNetworkLabel(chainId)}. Use Global Swap for Nova/ALLTRA majors, or Bridge for mesh custody hops.`}
           </p>
-          <Link to={paths.bridge} className="mt-2 inline-flex font-medium text-signet-gold underline">
-            Open Bridge →
-          </Link>
+          <div className="mt-2 flex flex-wrap gap-3">
+            <a
+              href={globalSwapUrl({ tab: "alltra" })}
+              className="inline-flex font-medium text-signet-gold underline"
+            >
+              Open Global Swap →
+            </a>
+            <Link to={paths.bridge} className="inline-flex font-medium text-signet-muted underline">
+              Open Bridge →
+            </Link>
+            <Link to={paths.send} className="inline-flex font-medium text-signet-muted underline">
+              External Send →
+            </Link>
+          </div>
         </div>
       )}
 

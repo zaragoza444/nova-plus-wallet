@@ -9,6 +9,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    allowedHosts: ['novablockchainsystem.com', '.novablockchainsystem.com', 'localhost'],
+    allowedHosts: ['novabank.uk', '.novabank.uk', 'localhost'],
   },
 });

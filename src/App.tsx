@@ -71,10 +71,11 @@ function Shell(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
+  const basePath = import.meta.env.BASE_URL === "/" ? undefined : import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
     <WalletProvider>
       <ToastProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={basePath}>
           <>
             <AutoLockMonitor />
             <Routes>

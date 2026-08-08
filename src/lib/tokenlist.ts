@@ -9,7 +9,9 @@ const TTL_MS = 24 * 60 * 60 * 1000;
 /** Major symbols scanned by default on public chains (subset of fetched list — not addresses). */
 const CURATED_SYMBOLS = new Set([
   "USDC", "USDT", "DAI", "FRAX", "USDE", "PYUSD", "FDUSD", "TUSD",
-  "WETH", "ETH", "WBTC", "BTC", "BNB", "WBNB", "MATIC", "POL", "WMATIC",
+  "WETH", "ETH", "WBTC", "BTC", "BNB", "WBNB", "TRX", "WTRX",
+  "USDT-LEGACY", "USDT-BNB", "USDT-TRC20", "AUSDT", "AUSDC",
+  "MATIC", "POL", "WMATIC",
   "LINK", "UNI", "AAVE", "ARB", "OP", "STETH", "WSTETH", "CBETH",
   "USDC.E", "USDT.E", "DAI.E",
 ]);

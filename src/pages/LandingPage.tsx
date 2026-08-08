@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { paths } from "../lib/routes";
 import { brand, brandLogoUrl, brandProductName, brandTagline } from "../lib/brand";
 import { SignetLogo, SignetWordmark } from "../components/layout/SignetLogo";
+import { globalSwapUrl } from "../lib/swap/globalSwap";
 
 export function LandingPage(): JSX.Element {
   const hasWordmark = Boolean(brand.wordmarkUrl);
@@ -22,14 +23,39 @@ export function LandingPage(): JSX.Element {
           </div>
         )}
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-signet-muted">{brandTagline()}</p>
-        <Link
-          to={paths.home}
-          className="btn-primary mx-auto mt-8 inline-flex min-w-[200px] px-10 text-base no-underline shadow-gold-md"
-        >
-          Open Wallet
-        </Link>
+        <p className="mx-auto mt-3 max-w-sm text-xs text-signet-muted">
+          Self-custody send &amp; receive · Global Swap for popular ETH · BNB · TRX ↔ Nova chains
+        </p>
+        <div className="mx-auto mt-8 flex w-full max-w-sm flex-col gap-3">
+          <Link
+            to={paths.home}
+            className="btn-primary inline-flex min-w-[200px] justify-center px-10 text-base no-underline shadow-gold-md"
+          >
+            Open Wallet
+          </Link>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Link
+              to={paths.send}
+              className="rounded-full border border-signet-border-glow bg-signet-surface/80 px-4 py-2 text-xs font-medium text-signet-text no-underline"
+            >
+              Send
+            </Link>
+            <Link
+              to={paths.receive}
+              className="rounded-full border border-signet-border-glow bg-signet-surface/80 px-4 py-2 text-xs font-medium text-signet-text no-underline"
+            >
+              Receive
+            </Link>
+            <a
+              href={globalSwapUrl({ tab: "alltra" })}
+              className="rounded-full border border-signet-gold/40 bg-signet-gold/10 px-4 py-2 text-xs font-medium text-signet-gold no-underline"
+            >
+              Global Swap
+            </a>
+          </div>
+        </div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-          {["AnakaChain", "Partner nets", "World chains"].map((c) => (
+          {["NovaONE", "NRW", "ALLTRA", "ETH · BNB · TRX"].map((c) => (
             <span
               key={c}
               className="rounded-full border border-signet-border-glow bg-signet-surface/80 px-3 py-1 text-[11px] text-signet-muted"

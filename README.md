@@ -2,11 +2,11 @@
 
 Self-custody chain wallet SPA for the Nova Bank mesh (Signet fork).
 
-Live: https://novablockchainsystem.com/wallet/
+Live: https://novabank.uk/wallet/
 
 ## Chains
 
-- NovaONE (22016) - https://novablockchainsystem.com/novaone-rpc/
+- NovaONE (22016) - https://novabank.uk/novaone-rpc/
 - NRW World, ALLTRA, ecosystem tokens via nova-chains.json
 
 ## Build from Nova monorepo
@@ -18,6 +18,6 @@ Live: https://novablockchainsystem.com/wallet/
 
     npm run nova-plus:deploy
 
-Served from /var/www/nova-plus-wallet (nginx location /wallet/).
+Built into the NovaBank production image and served from `/wallet/`.
 
 Source: @nova/swap in the Nova monorepo (github.com/zaragoza444/nova).

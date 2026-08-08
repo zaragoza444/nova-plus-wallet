@@ -1,14 +1,14 @@
 {
-  "name": "Signet",
-  "short_name": "Signet",
-  "description": "AnakaTech multi-chain wallet",
-  "start_url": "/",
+  "name": "Nova Plus Wallet",
+  "short_name": "Nova Wallet",
+  "description": "Self-custody multi-chain wallet for Nova Bank",
+  "start_url": "/wallet/",
   "display": "standalone",
   "background_color": "#08080C",
   "theme_color": "#08080C",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/wallet/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

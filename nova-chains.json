@@ -723,7 +723,7 @@
       "nativeSymbol": "NOVA",
       "rpcUrls": [
         "https://nova-bank-api-production-7311.up.railway.app/rpc",
-        "https://novablockchainsystem.com/rpc",
+        "https://novabank.uk/rpc",
         "http://novabank.uk:28545/rpc"
       ],
       "explorerUrl": "http://novabank.uk:28545/explorer",
@@ -1339,9 +1339,9 @@
       "nativeSymbol": "NRW",
       "rpcUrls": [
         "https://nova-bank-api-production-7311.up.railway.app/nrw-rpc/",
-        "https://novablockchainsystem.com/nrw-rpc/"
+        "https://novabank.uk/nrw-rpc/"
       ],
-      "explorerUrl": "https://novablockchainsystem.com/",
+      "explorerUrl": "https://novabank.uk/",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
       "swapEnabled": true,
       "transferable": true,
@@ -2053,10 +2053,10 @@
       "nativeSymbol": "VICTORYA",
       "rpcUrls": [
         "https://nova-bank-api-production-7311.up.railway.app/victoria-rpc/",
-        "https://novablockchainsystem.com/victoria-rpc/",
+        "https://novabank.uk/victoria-rpc/",
         "https://novabank.uk/victoria-rpc/"
       ],
-      "explorerUrl": "https://novablockchainsystem.com",
+      "explorerUrl": "https://novabank.uk",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
       "swapEnabled": true,
       "transferable": true,
@@ -2136,7 +2136,7 @@
       "nativeSymbol": "ALL",
       "rpcUrls": [
         "https://mainnet-rpc.alltra.global",
-        "https://alltra-rpc.novablockchainsystem.com/"
+        "https://novabank.uk/alltra-rpc/"
       ],
       "explorerUrl": "https://alltra.global",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",

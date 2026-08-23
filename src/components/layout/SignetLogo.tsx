@@ -26,7 +26,7 @@ function FallbackMark({ className }: { className?: string }): JSX.Element {
 export function SignetLogo({
   className = "h-8 w-8",
   variant = "mark",
-  alt = "Signet",
+  alt = "Nova Plus Wallet",
 }: SignetLogoProps): JSX.Element {
   const wordmark = brandLogoUrl(true);
   const logo = brandLogoUrl(false);
@@ -52,5 +52,5 @@ export function SignetLogo({
 }
 
 export function SignetWordmark({ className = "h-8" }: { className?: string }): JSX.Element {
-  return <SignetLogo variant="wordmark" className={className} alt="Signet" />;
+  return <SignetLogo variant="wordmark" className={className} alt="Nova Plus Wallet" />;
 }

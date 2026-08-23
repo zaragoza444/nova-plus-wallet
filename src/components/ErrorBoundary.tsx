@@ -3,7 +3,7 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
 type Props = { children: ReactNode; fallback?: ReactNode };
 type State = { error: Error | null };
 
-/** Drop into Signet src/components/ErrorBoundary.tsx — wrap <App /> in main.tsx */
+/** Drop into Nova Plus Wallet src/components/ErrorBoundary.tsx — wrap <App /> in main.tsx */
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 

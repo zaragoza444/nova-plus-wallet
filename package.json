@@ -7,9 +7,7 @@
   "scripts": {
     "dev": "vite --port 5199 --host 127.0.0.1",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --port 5199",
-    "deploy": "powershell -ExecutionPolicy Bypass -File ../nova/scripts/deploy-nova-plus-wallet.ps1",
-    "build-from-nova": "powershell -ExecutionPolicy Bypass -File ../nova/scripts/deploy-nova-plus-wallet.ps1 -CopyToSiblingRepo"
+    "preview": "vite preview --port 5199"
   },
   "dependencies": {
     "ethers": "^6.17.0",

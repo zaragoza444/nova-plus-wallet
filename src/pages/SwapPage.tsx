@@ -24,7 +24,7 @@ import {
   ONEINCH_CHAIN_IDS,
   unsupportedNetworkLabel,
 } from "../lib/swap/oneinch";
-import { globalSwapUrl, usesGlobalSwap } from "../lib/swap/globalSwap";
+import { usesGlobalSwap } from "../lib/swap/globalSwap";
 import type { TokenConfig } from "../types";
 
 const SLIPPAGE_OPTS = [0.1, 0.5, 1] as const;
@@ -235,12 +235,9 @@ export function SwapPage(): JSX.Element {
               : `Your wallet network is ${unsupportedNetworkLabel(chainId)}. Use Global Swap for Nova/ALLTRA majors, or Bridge for mesh custody hops.`}
           </p>
           <div className="mt-2 flex flex-wrap gap-3">
-            <a
-              href={globalSwapUrl({ tab: "alltra" })}
-              className="inline-flex font-medium text-signet-gold underline"
-            >
-              Open Global Swap →
-            </a>
+            <Link to={paths.swap} className="inline-flex font-medium text-signet-gold underline">
+              Open in-wallet swap →
+            </Link>
             <Link to={paths.bridge} className="inline-flex font-medium text-signet-muted underline">
               Open Bridge →
             </Link>
@@ -256,7 +253,7 @@ export function SwapPage(): JSX.Element {
           <p className="text-sm font-semibold text-signet-warning">1inch API key required</p>
           <p className="mt-1 text-sm text-signet-muted">
             Add <span className="font-mono text-signet-text">VITE_1INCH_API_KEY</span> to your
-            environment to fetch live quotes and execute swaps. Without it, Signet will not show
+            environment to fetch live quotes and execute swaps. Without it, Nova Plus Wallet will not show
             output amounts.
           </p>
         </div>

@@ -6,24 +6,9 @@ import {
   NRW_WORLD_SWAP_ROUTER,
   NRW_WORLD_WRAPPED_BRIDGE,
 } from "./nova-mesh-tokens";
+import { ALLOWED_NOVA_API_HOSTS } from "./nova-api";
 
-const env = (import.meta as unknown as { env?: Record<string, string> }).env;
-
-export const NOVA_API_V1 =
-  env?.VITE_NOVA_API_URL?.replace(/\/$/, "") ??
-  "https://nova-bank-api-production-7311.up.railway.app/api/v1";
-
-export const ALLOWED_NOVA_API_HOSTS = new Set([
-  "nova-bank-api-production-7311.up.railway.app",
-  "novabank.uk",
-]);
-
-try {
-  const host = new URL(NOVA_API_V1).hostname;
-  if (host) ALLOWED_NOVA_API_HOSTS.add(host);
-} catch {
-  /* keep defaults */
-}
+export { ALLOWED_NOVA_API_HOSTS };
 
 export const SETTLEMENT_META_CHAIN_IDS = [22016, 33001] as const;
 
@@ -42,11 +27,23 @@ export interface SettlementMetaRail {
   wrappedBridge: string;
   settlement: "meta";
   liquidity: "nova-settlement-meta";
-  settlementPath: string;
-  liquidityHubPath: string;
-  marketQuotePath: string;
+  chainStatusPath: string;
+  swapStatusPath: string;
   routersStatusPath: string;
+  marketQuotePath: string;
+  exchangeInfoPath: string;
+  nrwHubPath: string;
 }
+
+const PATHS = {
+  novaStatus: "/chains/nova-one",
+  nrwStatus: "/chains/nrw-world",
+  swapStatus: "/swap/status",
+  routers: "/chains/liquidity/routers/status",
+  quote: "/chains/nova-one/markets/quote",
+  exchangeInfo: "/chains/nova-one/markets/exchangeInfo",
+  nrwHub: "/chains/nrw-world/liquidity/hub",
+} as const;
 
 export const SETTLEMENT_META_RAILS: Record<SettlementMetaChainId, SettlementMetaRail> = {
   22016: {
@@ -58,10 +55,12 @@ export const SETTLEMENT_META_RAILS: Record<SettlementMetaChainId, SettlementMeta
     wrappedBridge: NOVA_ONE_WRAPPED_BRIDGE,
     settlement: "meta",
     liquidity: "nova-settlement-meta",
-    settlementPath: `${NOVA_API_V1}/settlement/meta/status`,
-    liquidityHubPath: `${NOVA_API_V1}/chains/nova-one/liquidity/hub`,
-    marketQuotePath: `${NOVA_API_V1}/chains/nova-one/markets/quote`,
-    routersStatusPath: `${NOVA_API_V1}/chains/liquidity/routers/status`,
+    chainStatusPath: PATHS.novaStatus,
+    swapStatusPath: PATHS.swapStatus,
+    routersStatusPath: PATHS.routers,
+    marketQuotePath: PATHS.quote,
+    exchangeInfoPath: PATHS.exchangeInfo,
+    nrwHubPath: PATHS.nrwHub,
   },
   33001: {
     chainId: 33001,
@@ -72,10 +71,12 @@ export const SETTLEMENT_META_RAILS: Record<SettlementMetaChainId, SettlementMeta
     wrappedBridge: NRW_WORLD_WRAPPED_BRIDGE,
     settlement: "meta",
     liquidity: "nova-settlement-meta",
-    settlementPath: `${NOVA_API_V1}/settlement/meta/status`,
-    liquidityHubPath: `${NOVA_API_V1}/chains/nrw-world/liquidity/hub`,
-    marketQuotePath: `${NOVA_API_V1}/chains/nova-one/markets/quote`,
-    routersStatusPath: `${NOVA_API_V1}/chains/liquidity/routers/status`,
+    chainStatusPath: PATHS.nrwStatus,
+    swapStatusPath: PATHS.swapStatus,
+    routersStatusPath: PATHS.routers,
+    marketQuotePath: PATHS.quote,
+    exchangeInfoPath: PATHS.exchangeInfo,
+    nrwHubPath: PATHS.nrwHub,
   },
 };
 

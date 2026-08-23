@@ -83,7 +83,7 @@ function ChainDot({ name, status }: { name: string; status: "ok" | "unavailable"
 }
 
 export function Dashboard(): JSX.Element {
-  const { address } = useWalletContext();
+  const { address, isWatchOnly, isOwnerWallet } = useWalletContext();
   const { displayCurrency } = useDisplaySettings();
   const { tokenRows, totalUsd, loading, chainStatus, error, refresh } = useVisibleTokenRows(
     address ?? undefined,
@@ -104,6 +104,17 @@ export function Dashboard(): JSX.Element {
 
   return (
     <div className="page-shell">
+      {isOwnerWallet && (
+        <div className="rounded-2xl border border-signet-gold/30 bg-signet-gold/10 px-4 py-3 text-sm reveal">
+          <p className="font-heading font-semibold text-signet-gold">Nova Plus Wallet owner</p>
+          <p className="mt-1 break-all font-mono text-[11px] text-signet-muted">{address}</p>
+          {isWatchOnly && (
+            <p className="mt-1 text-xs text-signet-muted">
+              This view cannot send. Create or import a vault with the matching key to use Send and Swap.
+            </p>
+          )}
+        </div>
+      )}
       {fafo.anyEnforced && (
         <div className="rounded-2xl border border-signet-danger/30 bg-signet-danger-soft px-4 py-3 text-sm reveal">
           <p className="font-heading font-semibold text-signet-danger">FAFO enforcement active</p>

@@ -20,7 +20,7 @@ scp -o BatchMode=yes -r dist/* "${VpsHost}:${RemotePath}/"
 ssh -o BatchMode=yes $VpsHost "sudo chmod -R a+rX $RemotePath"
 
 Write-Host ''
-Write-Host 'Add nginx location (if missing):' -ForegroundColor Yellow
-Write-Host "  location /wallet/ { alias /var/www/nova-plus-wallet/; try_files `$uri `$uri/ /wallet/index.html; }"
+Write-Host 'SPA refresh 404: install deploy/nginx-wallet.conf (try_files -> /wallet/index.html).' -ForegroundColor Yellow
+Write-Host '  location /wallet/ { alias /var/www/nova-plus-wallet/; try_files $uri $uri/ /wallet/index.html; }'
 Write-Host ''
 Write-Host "Live: http://51.75.64.28/wallet/" -ForegroundColor Green

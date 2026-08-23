@@ -28,8 +28,10 @@ export function assetDetail(chainId: number, symbol: string): string {
 export function tokenChart(coingeckoId: string): string {
   return `/app/tokens/chart/${encodeURIComponent(coingeckoId)}`;
 }
-export function sendWithToken(chainId: number, symbol: string): string {
-  return `${paths.send}?chainId=${chainId}&symbol=${encodeURIComponent(symbol)}`;
+export function sendWithToken(chainId: number, symbol: string, to?: string): string {
+  const q = new URLSearchParams({ chainId: String(chainId), symbol });
+  if (to) q.set("to", to);
+  return `${paths.send}?${q.toString()}`;
 }
 export function receiveOnChain(chainId: number): string {
   return `${paths.receive}?chainId=${chainId}`;

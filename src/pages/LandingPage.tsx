@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { paths } from "../lib/routes";
 import { brandProductName, brandTagline } from "../lib/brand";
 import { SignetLogo } from "../components/layout/SignetLogo";
+import { NOVA_PLUS_WALLET_OWNER } from "../lib/walletOwner";
 
 export function LandingPage(): JSX.Element {
   const name = brandProductName();
@@ -14,8 +15,8 @@ export function LandingPage(): JSX.Element {
           <h1 className="font-display text-4xl font-semibold tracking-wide gold-text">{name}</h1>
         </div>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-signet-muted">{brandTagline()}</p>
-        <p className="mx-auto mt-3 max-w-sm text-xs text-signet-muted">
-          Self-custody send, receive, and swap on NovaONE, NRW, and ALLTRA.
+        <p className="mx-auto mt-3 max-w-sm break-all font-mono text-[11px] text-signet-gold">
+          Owner {NOVA_PLUS_WALLET_OWNER}
         </p>
         <div className="mx-auto mt-8 flex w-full max-w-sm flex-col gap-3">
           <Link

@@ -41,7 +41,7 @@ function defaultSwapChain(current: number, enabledIds: number[]): number {
 }
 
 export function SwapPage(): JSX.Element {
-  const { address, chainId, setChainId } = useWalletContext();
+  const { address, chainId, setChainId, isWatchOnly } = useWalletContext();
   const { pushToast } = useToast();
   const [searchParams] = useSearchParams();
   const { enabledIds } = useEnabledChains();
@@ -226,6 +226,23 @@ export function SwapPage(): JSX.Element {
   }, [quoteOut, amountIn, fromMeta, toMeta]);
 
   if (!address) return <ConnectWallet />;
+
+  if (isWatchOnly) {
+    return (
+      <PageShell width="lg">
+        <PageHeader
+          eyebrow="Swap"
+          title="Watch-only owner"
+          description="Quotes are visible after you import the owner key. This device currently has no signer for the Nova Plus Wallet owner."
+        />
+        <EmptyState
+          title="Cannot swap without a signing key"
+          description={address}
+          action={{ label: "Import owner wallet", to: paths.importWallet }}
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell width="lg">

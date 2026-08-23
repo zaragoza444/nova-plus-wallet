@@ -2,13 +2,13 @@
   "name": "Nova Plus Wallet",
   "short_name": "Nova Plus",
   "description": "Self-custody multi-chain wallet for Nova Bank",
-  "start_url": "/nova-plus-wallet/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#08080C",
   "theme_color": "#08080C",
   "icons": [
     {
-      "src": "/nova-plus-wallet/favicon.svg",
+      "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

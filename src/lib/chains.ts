@@ -92,9 +92,10 @@ export const CHAINS: ChainDef[] = [
     nativeCurrency: { name: "NovaONE", symbol: "NOVA", decimals: 18, usd: 1 },
     rpcUrls: [
       "https://novabank.uk/novaone-rpc/",
+      "https://nova-bank-api-production-7311.up.railway.app/novaone-rpc/",
     ],
-    blockExplorerUrls: ["https://novabank.uk"],
-    iconColor: "#5B8DEF", category: "anaka", tier: "private-banking", isDefault: true, isInternal: false,
+    blockExplorerUrls: ["https://novaone.novablockchainsystem.com/", "https://novabank.uk"],
+    iconColor: "#5B8DEF", category: "partner", tier: "partner", isDefault: true, isInternal: false,
     swapRouter: NOVA_ONE_SWAP_ROUTER,
     settlement: "meta",
     liquidity: "nova-settlement-meta",

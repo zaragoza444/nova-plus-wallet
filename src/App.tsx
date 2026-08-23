@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { HashRouter, Navigate, Outlet, Route, Routes, useParams } from "react-router-dom";
 import { WalletProvider, useWalletContext } from "./context/WalletContext";
 import { ToastProvider } from "./context/ToastContext";
 import { Header } from "./components/layout/Header";
@@ -50,7 +50,7 @@ function LegacySettingsRedirect(): JSX.Element {
 // Gate every /app route on a real, unlocked wallet.
 function RequireWallet({ children }: { children: JSX.Element }): JSX.Element {
   const { status } = useWalletContext();
-  if (status === "no-wallet") return <Navigate to="/onboarding" replace />;
+  if (status === "no-wallet" || status === "watch-only") return <Navigate to="/onboarding" replace />;
   if (status === "locked") return <Navigate to="/locked" replace />;
   return children;
 }
@@ -71,11 +71,10 @@ function Shell(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
-  const basePath = import.meta.env.BASE_URL === "/" ? undefined : import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
     <WalletProvider>
       <ToastProvider>
-        <BrowserRouter basename={basePath}>
+        <HashRouter>
           <>
             <AutoLockMonitor />
             <Routes>
@@ -120,7 +119,7 @@ export default function App(): JSX.Element {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </>
-        </BrowserRouter>
+        </HashRouter>
       </ToastProvider>
     </WalletProvider>
   );

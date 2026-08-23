@@ -164,14 +164,13 @@ function registryListedTokens(chainId: number): ListedToken[] {
   if (!chain) return [];
   const out: ListedToken[] = [];
   for (const t of chain.tokens) {
-    if (t.standard === "native") continue;
-    const address = t.address || t.tokenizedAddress;
-    if (!address) continue;
+    if (t.standard === "native" || t.standard === "meta") continue;
+    if (!t.address) continue;
     out.push({
       symbol: t.symbol,
       name: t.name,
       decimals: t.decimals,
-      address,
+      address: t.address,
       coingeckoId: t.coingeckoId,
     });
   }

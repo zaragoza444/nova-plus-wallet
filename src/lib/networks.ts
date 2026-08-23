@@ -15,6 +15,7 @@ export type { ChainDef } from "./chains";
 
 export const ENABLED_KEY = "signet.networks.v1";
 export const USER_CHAINS_KEY = "signet.userchains.v1";
+const SETTLEMENT_MIGRATION_KEY = "signet.networks.settlement-v1";
 
 const CONFIRM = "NEEDS_CONFIRM";
 const CHANGE_EVENT = "signet:networks-changed";
@@ -56,7 +57,17 @@ export function getEnabledChainIds(): number[] {
       if (raw) {
         const parsed = JSON.parse(raw) as unknown;
         if (Array.isArray(parsed) && parsed.every((x) => typeof x === "number")) {
-          return parsed;
+          const ids = parsed as number[];
+          if (!storage.getItem(SETTLEMENT_MIGRATION_KEY)) {
+            const next = [...ids];
+            for (const id of [22016, 33001]) {
+              if (!next.includes(id)) next.push(id);
+            }
+            storage.setItem(ENABLED_KEY, JSON.stringify(next));
+            storage.setItem(SETTLEMENT_MIGRATION_KEY, "1");
+            return next;
+          }
+          return ids;
         }
       }
     } catch { /* fall through */ }

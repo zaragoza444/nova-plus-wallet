@@ -118,16 +118,22 @@ function mergeTokenSources(chain: ChainDef, listed: ListedToken[]): MergedToken[
   return [...byAddr.values()];
 }
 
+async function connectRpc(urls: string[]): Promise<JsonRpcProvider | null> {
+  for (const url of urls) {
+    const provider = new JsonRpcProvider(url);
+    if (await pingRpc(provider)) return provider;
+  }
+  return null;
+}
+
 async function readChain(chain: ChainDef, address: string): Promise<ChainReadResult> {
   const base = { chainId: chain.id, chainName: chain.name };
-  const rpc = chain.rpcUrls[0];
-  if (!rpc) {
+  if (!chain.rpcUrls.length) {
     return { ...base, status: "unavailable", rows: [], knownKeys: new Set() };
   }
 
-  const provider = new JsonRpcProvider(rpc);
-  const alive = await pingRpc(provider);
-  if (!alive) {
+  const provider = await connectRpc(chain.rpcUrls);
+  if (!provider) {
     return { ...base, status: "unavailable", rows: [], knownKeys: new Set() };
   }
 

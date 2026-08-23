@@ -29,9 +29,11 @@ import {
   getStoredActiveChainId,
   setStoredActiveChainId,
 } from "../lib/activeChain";
+import { isNovaPlusWalletOwner, NOVA_PLUS_WALLET_OWNER } from "../lib/walletOwner";
+import { clearUnlockSession, restoreUnlockSession, writeUnlockSession } from "../lib/unlockSession";
 
-export type WalletStatus = "no-wallet" | "locked" | "unlocked";
-export type WalletMode = "local" | "walletconnect" | null;
+export type WalletStatus = "no-wallet" | "locked" | "unlocked" | "watch-only";
+export type WalletMode = "local" | "walletconnect" | "watch" | null;
 
 interface LegacyWallet {
   address: string;
@@ -93,6 +95,9 @@ interface WalletCtxValue {
   ) => Promise<void>;
   lock: () => void;
   wipe: () => void;
+  isWatchOnly: boolean;
+  isOwnerWallet: boolean;
+  activateOwnerWatch: () => void;
 }
 
 let activeWallet: AnyWallet | null = null;
@@ -105,15 +110,39 @@ export function getActiveWallet(): AnyWallet | null {
 const DEFAULT_CHAIN = DEFAULT_CHAIN_IDS[0] ?? 1;
 const WalletCtx = createContext<WalletCtxValue | null>(null);
 
+function bootWallet(): { status: WalletStatus; address: string | null; hd: boolean } {
+  if (ks.hasVault()) {
+    const restored = restoreUnlockSession();
+    if (restored) {
+      const derived = deriveAccountAtIndex(restored.root, restored.index);
+      activeRootWallet = restored.root;
+      activeWallet = derived;
+      setActiveAccountIndex(restored.index);
+      return { status: "unlocked", address: derived.address, hd: walletSupportsHdAccounts(restored.root) };
+    }
+    return { status: "locked", address: ks.getStoredAddress(), hd: false };
+  }
+  clearUnlockSession();
+  return { status: "no-wallet", address: null, hd: false };
+}
+
+const OWNER_WATCH_ACCOUNT: AccountRecord = {
+  index: 0,
+  address: NOVA_PLUS_WALLET_OWNER,
+  label: "Nova Plus Wallet owner",
+};
+
 export function WalletProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const [status, setStatus] = useState<WalletStatus>(() => (ks.hasVault() ? "locked" : "no-wallet"));
-  const [address, setAddress] = useState<string | null>(() => ks.getStoredAddress());
+  const bootRef = useRef(bootWallet());
+  const boot = bootRef.current;
+  const [status, setStatus] = useState<WalletStatus>(boot.status);
+  const [address, setAddress] = useState<string | null>(boot.address);
   const [accountType, setAccountType] = useState<AccountType>(() => ks.getAccountType());
   const [chainId, setChainIdState] = useState<number>(() => getStoredActiveChainId() ?? DEFAULT_CHAIN);
   const [activeAccountIndex, setActiveAccountIndexState] = useState(() => getActiveAccountIndex());
   const [accountsTick, setAccountsTick] = useState(0);
   const [gateTick, setGateTick] = useState(0);
-  const [hdCapable, setHdCapable] = useState(false);
+  const [hdCapable, setHdCapable] = useState(boot.hd);
   const pending = useRef<AnyWallet | null>(null);
 
   useEffect(() => subscribeInstitutionalGateChanged(() => setGateTick((n) => n + 1)), []);
@@ -133,6 +162,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
     setActiveAccountIndexState(index);
     setAddress(derived.address);
     setHdCapable(walletSupportsHdAccounts(root));
+    writeUnlockSession(root, index, derived.address);
   }, []);
 
   const setUnlocked = useCallback(
@@ -238,13 +268,33 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
     [setUnlocked],
   );
 
+  const activateOwnerWatch = useCallback(() => {
+    activeWallet = null;
+    activeRootWallet = null;
+    pending.current = null;
+    setHdCapable(false);
+    clearInstitutionalGate();
+    clearUnlockSession();
+    setAccountType("personal");
+    setActiveAccountIndexState(0);
+    setAddress(null);
+    setStatus("no-wallet");
+  }, []);
+
   const lock = useCallback(() => {
     activeWallet = null;
     activeRootWallet = null;
     pending.current = null;
     setHdCapable(false);
     clearInstitutionalGate();
-    setStatus(ks.hasVault() ? "locked" : "no-wallet");
+    clearUnlockSession();
+    if (ks.hasVault()) {
+      setStatus("locked");
+      setAddress(ks.getStoredAddress());
+      return;
+    }
+    setAddress(null);
+    setStatus("no-wallet");
   }, []);
 
   const wipe = useCallback(() => {
@@ -255,19 +305,23 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
     activeRootWallet = null;
     pending.current = null;
     clearInstitutionalGate();
-    setAddress(null);
+    clearUnlockSession();
     setAccountType("personal");
     setActiveAccountIndexState(0);
     setHdCapable(false);
     setChainIdState(DEFAULT_CHAIN);
+    setAddress(null);
     setStatus("no-wallet");
   }, []);
 
+  const isWatchOnly = status === "watch-only";
+  const isOwnerWallet = isNovaPlusWalletOwner(address);
   const signer = status === "unlocked" ? getActiveWallet() : null;
+  const visibleAccounts = isWatchOnly ? [OWNER_WATCH_ACCOUNT] : accounts;
 
   const wallet: LegacyWallet = {
     address: address ?? "",
-    isConnected: status === "unlocked",
+    isConnected: status === "unlocked" || isWatchOnly,
     balances: {},
     chainId,
   };
@@ -277,14 +331,14 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
     address,
     signer,
     chainId,
-    mode: status === "unlocked" ? "local" : null,
+    mode: status === "unlocked" ? "local" : isWatchOnly ? "watch" : null,
     accountType,
     isInstitutional: accountType === "institutional",
-    gateUnlocked,
+    gateUnlocked: gateUnlocked,
     privateUnlocked: gateUnlocked,
     banks,
     activeAccountIndex,
-    accounts,
+    accounts: visibleAccounts,
     supportsHdAccounts: hdCapable,
     setChainId,
     switchAccount,
@@ -304,6 +358,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
     changePassword,
     lock,
     wipe,
+    isWatchOnly,
+    isOwnerWallet,
+    activateOwnerWatch,
   };
 
   return <WalletCtx.Provider value={value}>{children}</WalletCtx.Provider>;

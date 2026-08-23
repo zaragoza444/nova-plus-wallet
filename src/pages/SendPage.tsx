@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { formatUnits, parseUnits } from "ethers";
 import { ConnectWallet } from "../components/wallet/ConnectWallet";
@@ -61,7 +61,7 @@ function ReviewRow({ label, value, mono }: { label: string; value: string; mono?
 }
 
 export function SendPage(): JSX.Element {
-  const { address } = useWalletContext();
+  const { address, isWatchOnly } = useWalletContext();
   const { pushToast } = useToast();
   const [searchParams] = useSearchParams();
   const { tokenRows, loading, error, refresh } = useVisibleTokenRows(address ?? undefined, 15_000);
@@ -84,23 +84,36 @@ export function SendPage(): JSX.Element {
     return usdForAmount(selected, amount);
   }, [selected, amount]);
 
+  const destFromUrl = (searchParams.get("to") ?? "").trim();
+  const amountFromUrl = (searchParams.get("amount") ?? "").trim();
+
   const handleSelect = useCallback((row: TokenBalanceRow) => {
     setSelected(row);
-    setRecipient("");
-    setAmount("");
+    setRecipient(destFromUrl);
+    setAmount(amountFromUrl.toLowerCase() === "max" ? "" : amountFromUrl);
     setFormError(null);
     setStep("details");
-  }, []);
+  }, [destFromUrl, amountFromUrl]);
 
+  const urlApplied = useRef(false);
   useEffect(() => {
+    if (urlApplied.current || loading) return;
     const cid = Number(searchParams.get("chainId"));
     const sym = searchParams.get("symbol");
-    if (!Number.isFinite(cid) || !sym || loading) return;
+    if (!Number.isFinite(cid) || !sym) return;
     const row = tokenRows.find(
       (r) => r.chainId === cid && r.token.symbol.toUpperCase() === sym.toUpperCase(),
     );
-    if (row) handleSelect(row);
+    if (row) {
+      handleSelect(row);
+      urlApplied.current = true;
+    }
   }, [searchParams, tokenRows, loading, handleSelect]);
+
+  useEffect(() => {
+    if (!selected || amountFromUrl.toLowerCase() !== "max") return;
+    setAmount(maxAmount);
+  }, [selected, amountFromUrl, maxAmount]);
 
   const buildParams = useCallback(() => {
     if (!selected) return null;
@@ -170,6 +183,23 @@ export function SendPage(): JSX.Element {
 
   if (!address) return <ConnectWallet />;
 
+  if (isWatchOnly) {
+    return (
+      <PageShell width="lg">
+        <PageHeader
+          eyebrow="Send"
+          title="Watch-only owner"
+          description="This device is viewing the Nova Plus Wallet owner address. Import that wallet’s recovery phrase or private key to sign sends."
+        />
+        <EmptyState
+          title="Cannot send without a signing key"
+          description={address}
+          action={{ label: "Import owner wallet", to: paths.importWallet }}
+        />
+      </PageShell>
+    );
+  }
+
   return (
     <PageShell width="lg">
       <PageHeader
@@ -188,7 +218,11 @@ export function SendPage(): JSX.Element {
           ) : !tokenRows.filter((r) => BigInt(r.balance) > 0n).length ? (
             <EmptyState
               title="Nothing to send"
-              description="No tokens with balance on enabled networks."
+              description={
+                destFromUrl
+                  ? `This unlocked wallet has no NovaONE balance to send to ${shortAddr(destFromUrl)}. Unlock the funded account, then send native NOVA and the USDC wrap.`
+                  : "No tokens with balance on enabled networks."
+              }
               action={{ label: "Receive funds", to: paths.receive }}
             />
           ) : (

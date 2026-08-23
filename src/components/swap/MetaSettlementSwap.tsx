@@ -41,13 +41,13 @@ export function MetaSettlementSwap({ chainId }: { chainId: number }): JSX.Elemen
     setQuoteLoading(true);
     const q = await fetchMetaQuote({
       chainId,
-      symbol: fromSym,
-      side: "SELL",
+      fromSymbol: fromSym,
+      toSymbol: toSym,
       quantity: amount.trim(),
     });
     setQuote(q?.amountOut ?? (q?.price ? `${q.price} (mid)` : null));
     setQuoteLoading(false);
-  }, [amount, chainId, fromSym]);
+  }, [amount, chainId, fromSym, toSym]);
 
   useEffect(() => {
     const t = setTimeout(() => void refreshQuote(), 400);
@@ -66,7 +66,19 @@ export function MetaSettlementSwap({ chainId }: { chainId: number }): JSX.Elemen
         </p>
       </div>
       <div className="rounded-xl border border-signet-border bg-signet-bg/50 px-4 py-3 text-[11px] text-signet-muted space-y-1">
-        <p>Hub: {status?.hubConnected ? "connected" : status ? "unreachable" : "checking…"}</p>
+        <p>
+          Production:{" "}
+          {status?.production || status?.liveActive
+            ? "live"
+            : status
+              ? "unreachable from this origin"
+              : "checking…"}
+        </p>
+        <p>
+          Hub: {status?.hubConnected || status?.connected ? "connected" : status ? "unreachable" : "checking…"}
+          {status?.marionetteConnected ? " · Marionette live" : ""}
+        </p>
+        {status?.blockNumber ? <p>Block {status.blockNumber}</p> : null}
         <p className="font-mono">Router {rail.swapRouter}</p>
         <p className="font-mono">Wrap {rail.wrappedBridge}</p>
       </div>
@@ -112,8 +124,8 @@ export function MetaSettlementSwap({ chainId }: { chainId: number }): JSX.Elemen
         </span>
       </div>
       <p className="text-[11px] text-signet-muted">
-        Quotes are indicative from the NovaONE market book backed by settlement-meta liquidity.
-        Ledger execute stays on the Nova API; this wallet does not submit settlement orders.
+        Quotes use the live NovaONE book when the production API is reachable, otherwise the
+        settlement-meta mid (CoinGecko + Nova pegs). Ledger execute stays on the Nova Bank API.
       </p>
     </div>
   );

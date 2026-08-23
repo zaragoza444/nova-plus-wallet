@@ -38,9 +38,9 @@ export function Header(): JSX.Element {
                   Institutional
                 </span>
               )}
-              {mode === "walletconnect" && (
-                <span className="rounded-full border border-signet-primary/30 bg-signet-primary/5 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-signet-primary">
-                  WC
+              {mode === "watch" && (
+                <span className="rounded-full border border-signet-gold/40 bg-signet-gold/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-signet-gold">
+                  Owner
                 </span>
               )}
               <FAFOBadge statuses={fafo.statuses} />

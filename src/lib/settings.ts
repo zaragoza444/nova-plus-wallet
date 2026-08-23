@@ -14,7 +14,7 @@ export interface SignetSettings {
 }
 
 const DEFAULTS: SignetSettings = {
-  autoLockMinutes: 15,
+  autoLockMinutes: 0,
   displayCurrency: "USD",
 };
 
@@ -124,3 +124,12 @@ export function formatFiatEstimate(
     maximumFractionDigits: 2,
   });
 }
+
+/** One-time: keep this device signed in across refresh unless the customer locks. */
+(function migrateStaySignedIn(): void {
+  const s = storage();
+  if (!s) return;
+  if (s.getItem("signet.migrate.stay-session.v1")) return;
+  s.setItem("signet.migrate.stay-session.v1", "1");
+  saveSettings({ autoLockMinutes: 0 });
+})();

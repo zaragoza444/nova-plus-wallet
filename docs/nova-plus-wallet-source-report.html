@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Nova Plus Wallet — Full Source Code Report</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5c5c5c;
+    --rule: #d4d4d4;
+    --fill: #f4f4f4;
+    --accent: #1f4e79;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Calibri, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 22pt; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--accent); }
+  h2 { font-size: 14pt; margin: 22px 0 8px; color: var(--accent); page-break-after: avoid; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+  h3 { font-size: 12pt; margin: 16px 0 6px; page-break-after: avoid; }
+  p { margin: 0 0 8px; }
+  .cover { page-break-after: always; padding-top: 48px; }
+  .meta { color: var(--muted); font-size: 10pt; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.12em; font-size: 9pt; color: var(--accent); font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 8px 0 14px; page-break-inside: auto; }
+  th, td { border: 1px solid var(--rule); padding: 5px 7px; vertical-align: top; text-align: left; }
+  th { background: var(--fill); font-weight: 600; }
+  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 8.5pt; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc td { border: none; padding: 3px 0; }
+  .toc { margin-bottom: 18px; }
+  .note { background: var(--fill); padding: 10px 12px; border-left: 3px solid var(--accent); margin: 10px 0 14px; }
+  .stats { display: flex; gap: 10px; margin: 12px 0 16px; }
+  .stat { flex: 1; border: 1px solid var(--rule); padding: 10px; }
+  .stat b { display: block; font-size: 16pt; color: var(--accent); }
+  .stat span { font-size: 8.5pt; color: var(--muted); }
+  ul { margin: 4px 0 10px 18px; padding: 0; }
+  li { margin: 0 0 3px; }
+  .footer { position: running(reportfooter); }
+  .filelist td:first-child { white-space: nowrap; width: 52px; text-align: right; }
+  .small { font-size: 9pt; color: var(--muted); }
+  h2, h3, table, .note { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <p class="kicker">Source code report</p>
+  <h1>Nova Plus Wallet</h1>
+  <p style="font-size:13pt;margin-bottom:24px;">Self-custody SPA for NovaONE, NRW World, and ALLTRA</p>
+  <table>
+    <tr><th>Product</th><td>Nova Plus Wallet v1.0.0</td></tr>
+    <tr><th>Repository</th><td class="mono">C:\Users\novac\nova-plus-wallet</td></tr>
+    <tr><th>Commit</th><td class="mono">0e0b360 — Ship NovaONE and NRW World on live production APIs</td></tr>
+    <tr><th>Branch</th><td class="mono">release/v1.0.0</td></tr>
+    <tr><th>Author</th><td>novatrusty2-ops</td></tr>
+    <tr><th>Dated</th><td>23 August 2026</td></tr>
+    <tr><th>Stack</th><td>Vite 8 · React 19 · TypeScript 6 · ethers 6 · Tailwind 3</td></tr>
+    <tr><th>Live (Pages)</th><td>https://novatrusty2-ops.github.io/nova-plus-wallet/</td></tr>
+    <tr><th>Live (VPS)</th><td>https://novabank.uk/wallet/ &nbsp;(deploy script: <span class="mono">scripts/deploy.ps1</span>)</td></tr>
+    <tr><th>Canonical remote</th><td class="mono">github.com/novatrusty2-ops/nova-plus-wallet</td></tr>
+  </table>
+  <p class="note">This document is a full source-code inventory and architecture report. It describes every application module under <span class="mono">src/</span>, the production chain/token catalog, custody model, swap and bridge paths, and known production constraints. It is not a dump of every source line.</p>
+</section>
+
+<h2>1. Contents</h2>
+<table class="toc">
+  <tr><td>2.</td><td>Executive summary</td></tr>
+  <tr><td>3.</td><td>What the product is</td></tr>
+  <tr><td>4.</td><td>Architecture</td></tr>
+  <tr><td>5.</td><td>Source inventory</td></tr>
+  <tr><td>6.</td><td>Routes and screens</td></tr>
+  <tr><td>7.</td><td>Chain registry</td></tr>
+  <tr><td>8.</td><td>Token catalog (NovaONE / NRW)</td></tr>
+  <tr><td>9.</td><td>Custody and security</td></tr>
+  <tr><td>10.</td><td>Balances, prices, and lists</td></tr>
+  <tr><td>11.</td><td>Swap: settlement-meta and 1inch</td></tr>
+  <tr><td>12.</td><td>Bridge</td></tr>
+  <tr><td>13.</td><td>Build, brand, and deploy</td></tr>
+  <tr><td>14.</td><td>Findings and production notes</td></tr>
+  <tr><td>15.</td><td>Appendix — every <span class="mono">src</span> TypeScript file</td></tr>
+</table>
+
+<h2>2. Executive summary</h2>
+<div class="stats">
+  <div class="stat"><b>119</b><span>TypeScript files under src/</span></div>
+  <div class="stat"><b>10,352</b><span>Non-blank source lines</span></div>
+  <div class="stat"><b>108</b><span>Imported mesh tokens (54 × 2 chains)</span></div>
+  <div class="stat"><b>18</b><span>Registered chain definitions</span></div>
+</div>
+<p>Nova Plus Wallet is a browser self-custody wallet. Keys are generated in the page, encrypted with the user password (ethers JSON keystore / scrypt), and stored only in <span class="mono">localStorage</span>. The mnemonic is shown once and is not persisted. Signing stays in memory after unlock.</p>
+<p>The product surface is send, receive, swap, bridge, token catalog, and settings. NovaONE (chain 22016) and NRW World (33001) are default partner chains. Their catalogs are tokenized onto Nova settlement-meta (m2) liquidity. Local ERC-20 <span class="mono">balanceOf</span> on those chains is only the wrapped-bridge USDC. ALLTRA and Anaka contract addresses are canonical tokenized references, not copied onto the wrong chain.</p>
+<p>Swap on 22016/33001 uses the Nova Bank API (HTTPS host allowlist) with a CoinGecko + peg mid fallback. Public EVM chains use 1inch v6 when <span class="mono">VITE_1INCH_API_KEY</span> is set. CSS class names still use the historical <span class="mono">signet-*</span> prefix; the product name is Nova Plus Wallet. Signet is not this product.</p>
+
+<h2>3. What the product is</h2>
+<h3>3.1 Identity</h3>
+<table>
+  <tr><th>Name</th><td>Nova Plus Wallet (fallback in <span class="mono">src/lib/brand.ts</span>)</td></tr>
+  <tr><th>Tagline</th><td>Self-custody wallet for Nova Bank and the Nova mesh</td></tr>
+  <tr><th>Entry</th><td><span class="mono">src/main.tsx</span> → ErrorBoundary → <span class="mono">App.tsx</span></td></tr>
+  <tr><th>Router basename</th><td><span class="mono">import.meta.env.BASE_URL</span> so the same build can live at <span class="mono">/wallet/</span> or <span class="mono">/nova-plus-wallet/</span></td></tr>
+  <tr><th>Dev server</th><td>Vite port 5199 (package.json) / config also lists 5173 — use the npm script</td></tr>
+</table>
+<h3>3.2 Dependencies (runtime)</h3>
+<table>
+  <tr><th>ethers</th><td>^6.17.0 — RPC, ERC-20, keystore, send, bridge</td></tr>
+  <tr><th>react / react-dom</th><td>^19.2.7</td></tr>
+  <tr><th>react-router-dom</th><td>^7.18.1</td></tr>
+  <tr><th>recharts</th><td>^3.9.0 — token chart page</td></tr>
+  <tr><th>qrcode</th><td>^1.5.4 — receive address QR</td></tr>
+</table>
+<p class="small">Dev: Vite 8, TypeScript 6, Tailwind 3, Autoprefixer, PostCSS, @vitejs/plugin-react.</p>
+
+<h2>4. Architecture</h2>
+<p>The app is a static SPA. There is no Nova Plus Wallet backend. The browser talks to:</p>
+<ul>
+  <li>Public HTTPS RPCs listed on each chain (NovaONE / NRW via novabank.uk plus Railway fallbacks).</li>
+  <li>Nova Bank API <span class="mono">/api/v1</span> (novabank.uk, then Railway) for settlement-meta status and quotes.</li>
+  <li>CoinGecko simple price for USD where tokens declare <span class="mono">coingeckoId</span>.</li>
+  <li>1inch swap API on public EVM, only if an API key is built in.</li>
+  <li>Optional chainid.network world-chain list for extra public networks.</li>
+</ul>
+<p><b>Layering</b></p>
+<table>
+  <tr><th>UI pages</th><td><span class="mono">src/pages/</span> — routes, layout, forms</td></tr>
+  <tr><th>Components</th><td><span class="mono">src/components/</span> — wallet, tokens, swap, bridge, settings, security</td></tr>
+  <tr><th>Hooks</th><td><span class="mono">src/hooks/</span> — balances, enabled chains, FAFO, bridge, transfer</td></tr>
+  <tr><th>Context</th><td>Wallet (unlock/session) and Toast</td></tr>
+  <tr><th>Domain lib</th><td><span class="mono">src/lib/</span> — chains, keystore, networks, prices, swap, bridge, settlement</td></tr>
+</table>
+<p>Wallet routes under <span class="mono">/app/*</span> are gated: no vault → onboarding; locked → <span class="mono">/locked</span>.</p>
+
+<h2>5. Source inventory</h2>
+<p>Counts are non-blank lines from the 23 August 2026 tree.</p>
+<table>
+  <tr><th>Area</th><th>Files</th><th>Lines</th><th>Role</th></tr>
+  <tr><td>src/lib</td><td>25</td><td>2,727</td><td>Chains, keystore, prices, token lists, settlement, networks</td></tr>
+  <tr><td>src/pages</td><td>14</td><td>1,833</td><td>Landing, dashboard, send/receive/swap, tokens, assets, bridge</td></tr>
+  <tr><td>src/pages/settings</td><td>14</td><td>961</td><td>Accounts, security, backup, network, display, about</td></tr>
+  <tr><td>src/hooks</td><td>8</td><td>797</td><td>Live reads and polling</td></tr>
+  <tr><td>src/lib/bridge</td><td>6</td><td>641</td><td>Hub/spoke/vault execute + history</td></tr>
+  <tr><td>src/components/tokens</td><td>5</td><td>472</td><td>Catalog, search, add, hide</td></tr>
+  <tr><td>src/components/bridge</td><td>3</td><td>394</td><td>Bridge UI</td></tr>
+  <tr><td>src/lib/swap</td><td>3</td><td>334</td><td>Settlement-meta, 1inch, global-swap URL</td></tr>
+  <tr><td>src/context</td><td>2</td><td>309</td><td>Wallet session + toasts</td></tr>
+  <tr><td>src/components/assets</td><td>2</td><td>293</td><td>Asset list and detail</td></tr>
+  <tr><td>src/components/wallet</td><td>4</td><td>263</td><td>Connect, account, network switchers</td></tr>
+  <tr><td>src/components/common</td><td>11</td><td>320</td><td>Shell, modal, empty/error, QR-adjacent UI</td></tr>
+  <tr><td>Other components</td><td>—</td><td>~650</td><td>Layout, security, settings, FAFO, banks, swap widget</td></tr>
+  <tr><td>src root</td><td>4</td><td>156</td><td>App, main, ErrorBoundary, CSS entry</td></tr>
+</table>
+<h3>5.1 Largest modules</h3>
+<table>
+  <tr><th>Lines</th><th>File</th></tr>
+  <tr><td>452</td><td class="mono">src/pages/SwapPage.tsx</td></tr>
+  <tr><td>401</td><td class="mono">src/pages/settings/SettingsNetworkPage.tsx</td></tr>
+  <tr><td>370</td><td class="mono">src/pages/SendPage.tsx</td></tr>
+  <tr><td>287</td><td class="mono">src/context/WalletContext.tsx</td></tr>
+  <tr><td>280</td><td class="mono">src/hooks/useTokenBalances.ts</td></tr>
+  <tr><td>267</td><td class="mono">src/lib/networks.ts</td></tr>
+  <tr><td>255</td><td class="mono">src/lib/bridge/execute.ts</td></tr>
+  <tr><td>235</td><td class="mono">src/components/assets/AssetDetail.tsx</td></tr>
+  <tr><td>224</td><td class="mono">src/lib/chains.ts</td></tr>
+  <tr><td>221</td><td class="mono">src/lib/keystore.ts</td></tr>
+  <tr><td>215</td><td class="mono">src/lib/transfer.ts</td></tr>
+  <tr><td>206</td><td class="mono">src/lib/prices.ts</td></tr>
+  <tr><td>194</td><td class="mono">src/lib/swap/metaSettlement.ts</td></tr>
+</table>
+
+<h2>6. Routes and screens</h2>
+<p>Defined in <span class="mono">src/App.tsx</span> and <span class="mono">src/lib/routes.ts</span>.</p>
+<table>
+  <tr><th>Path</th><th>Gate</th><th>Screen</th></tr>
+  <tr><td class="mono">/</td><td>public</td><td>LandingPage</td></tr>
+  <tr><td class="mono">/onboarding</td><td>public</td><td>Create / import wallet</td></tr>
+  <tr><td class="mono">/locked</td><td>vault exists</td><td>Password unlock</td></tr>
+  <tr><td class="mono">/app</td><td>unlocked</td><td>Dashboard — portfolio + token rows</td></tr>
+  <tr><td class="mono">/app/send</td><td>unlocked</td><td>Native / ERC-20 send</td></tr>
+  <tr><td class="mono">/app/receive</td><td>unlocked</td><td>Address + QR</td></tr>
+  <tr><td class="mono">/app/swap</td><td>unlocked</td><td>Settlement-meta or 1inch</td></tr>
+  <tr><td class="mono">/app/tokens</td><td>unlocked</td><td>Balances + mesh catalog + search/add</td></tr>
+  <tr><td class="mono">/app/tokens/chart/:id</td><td>unlocked</td><td>CoinGecko chart (recharts)</td></tr>
+  <tr><td class="mono">/app/assets</td><td>unlocked</td><td>Asset list</td></tr>
+  <tr><td class="mono">/app/assets/:chainId/:symbol</td><td>unlocked</td><td>Asset detail</td></tr>
+  <tr><td class="mono">/app/bridge</td><td>unlocked</td><td>Hub / spoke bridge UI</td></tr>
+  <tr><td class="mono">/app/banks</td><td>unlocked</td><td>Bank directory placeholders</td></tr>
+  <tr><td class="mono">/app/more</td><td>unlocked</td><td>More links</td></tr>
+  <tr><td class="mono">/app/settings/*</td><td>unlocked</td><td>Accounts, general, security, backup, network, notifications, display, connections, advanced, FAFO, about</td></tr>
+</table>
+<p>Legacy unprefixed <span class="mono">/tokens</span>, <span class="mono">/assets</span>, <span class="mono">/bridge</span>, <span class="mono">/settings</span> redirect into <span class="mono">/app</span>.</p>
+
+<h2>7. Chain registry</h2>
+<p>Source: <span class="mono">src/lib/chains.ts</span>. Values marked <span class="mono">NEEDS_CONFIRM</span> fail loud instead of inventing data. NovaONE is <b>partner / default</b> (not private-banking), so it is visible without the institutional gate.</p>
+<table>
+  <tr><th>ID</th><th>Name</th><th>Tier</th><th>Default</th><th>Notes</th></tr>
+  <tr><td>22016</td><td>NovaONE</td><td>partner</td><td>yes</td><td>Settlement-meta; RPC novabank.uk + Railway</td></tr>
+  <tr><td>33001</td><td>NRW World</td><td>partner</td><td>yes</td><td>Same liquidity rail; local USDC wrap</td></tr>
+  <tr><td>138</td><td>Defi Oracle Meta</td><td>partner</td><td>yes</td><td>17 verified ERC-20s</td></tr>
+  <tr><td>651940</td><td>ALLTRA</td><td>partner</td><td>yes</td><td>Canonical tokenized ERC-20 home for many mesh refs</td></tr>
+  <tr><td>9001</td><td>Nova Production</td><td>partner</td><td>no</td><td>Internal mesh</td></tr>
+  <tr><td>11011</td><td>AnakaChain</td><td>public</td><td>no</td><td></td></tr>
+  <tr><td>11012–11015</td><td>Anaka layers</td><td>private-banking</td><td>no</td><td>Hidden until institutional gate</td></tr>
+  <tr><td>1, 56, 42161, 8453, 137, 10, 43114, 100</td><td>Public EVM</td><td>world</td><td>no</td><td>1inch-capable when key present</td></tr>
+</table>
+<p><span class="mono">src/lib/networks.ts</span> persists enabled chain IDs in <span class="mono">signet.networks.v1</span>. A one-time migration key <span class="mono">signet.networks.settlement-v1</span> inserts 22016 and 33001 for wallets that saved an older enabled-set. Private-banking chains are filtered unless the session gate is unlocked. RPC validation uses ethers <span class="mono">JsonRpcProvider</span> and checks <span class="mono">eth_chainId</span>.</p>
+
+<h2>8. Token catalog (NovaONE / NRW)</h2>
+<p>Generated catalog: <span class="mono">src/lib/nova-mesh-tokens.ts</span> (from <span class="mono">public/nova-chains.json</span> via <span class="mono">scripts/gen-mesh-tokens.cjs</span>). Runtime does <b>not</b> fetch that JSON; the TypeScript module is the live catalog.</p>
+<table>
+  <tr><th></th><th>NovaONE 22016</th><th>NRW World 33001</th></tr>
+  <tr><td>Listed assets</td><td>54</td><td>54</td></tr>
+  <tr><td>Native</td><td>1 (NOVA)</td><td>1 (NRW)</td></tr>
+  <tr><td>Local ERC-20 wrap</td><td>1 USDC</td><td>1 USDC</td></tr>
+  <tr><td>Meta / tokenized</td><td>52</td><td>52</td></tr>
+  <tr><td>Canonical tokenizedAddress</td><td>45</td><td>45</td></tr>
+  <tr><td>Swap router</td><td colspan="2" class="mono">0xEd04ee8307C0656207af5afe3926Ae2380052940</td></tr>
+  <tr><td>Wrapped bridge (USDC)</td><td class="mono">0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb</td><td class="mono">0xf2811B06807acF321FF9056dF668a621772999d8</td></tr>
+</table>
+<p>Canonical refs: ALLTRA 651940 ERC-20s, and Anaka wrap 11013 for USD, EUR, GBP, AUD, CHF, JPY, USDT, ETH, BTC. Those addresses must not be used as <span class="mono">balanceOf</span> targets on 22016/33001. <span class="mono">src/lib/tokenlist.ts</span> skips <span class="mono">standard === "meta"</span> when building local ERC-20 lists. UI: <span class="mono">MeshTokenCatalog.tsx</span> on the Tokens page.</p>
+
+<h2>9. Custody and security</h2>
+<p>Source: <span class="mono">src/lib/keystore.ts</span>.</p>
+<ul>
+  <li>Create: <span class="mono">Wallet.createRandom()</span> (BIP-39).</li>
+  <li>Import: 12/24-word phrase or 32-byte hex private key.</li>
+  <li>Persist: <span class="mono">wallet.encrypt(password)</span> → <span class="mono">signet.keystore.v1</span>. Password minimum 8 characters.</li>
+  <li>Metadata: address, createdAt, accountType in <span class="mono">signet.meta.v1</span>.</li>
+  <li>Unlock: <span class="mono">Wallet.fromEncryptedJson</span>; signer held in React context only.</li>
+  <li>Auto-lock: <span class="mono">AutoLockMonitor</span> clears the in-memory signer after idle.</li>
+</ul>
+<div class="note"><b>Institutional gate.</b> <span class="mono">src/lib/institutionalGate.ts</span> compares a passphrase to SHA-256(<span class="mono">VITE_INSTITUTIONAL_GATE</span>) in the client. The file documents that this is not server-side authorization. Private-banking Anaka layers stay hidden until the session flag is set.</div>
+<p>Nova API fetches in <span class="mono">src/lib/nova-api.ts</span> allow only HTTPS hosts: novabank.uk, www, Railway production, plus a build-time <span class="mono">VITE_NOVA_API_URL</span> host. Relative <span class="mono">/api/v1</span> is allowed only on those same-origin hosts. This is the SSRF control for settlement quotes.</p>
+
+<h2>10. Balances, prices, and lists</h2>
+<p><span class="mono">useTokenBalances</span> walks enabled reachable chains. For each chain it tries RPC URLs in order until one answers. It reads native balance and ERC-20 <span class="mono">balanceOf</span> only for tokens with a local address and <span class="mono">standard === "erc20"</span> (plus curated public lists / user-added tokens). Timeout 8s per RPC ping.</p>
+<p>USD: token <span class="mono">usd</span> peg → CoinGecko id → oracle map in <span class="mono">src/lib/prices.ts</span> (60s cache). Public chain token lists: Uniswap, PancakeSwap, and other remote lists in <span class="mono">tokenlist.ts</span>, cached 24h. User tokens: <span class="mono">usertokens.ts</span>. Hidden tokens: prefs.</p>
+
+<h2>11. Swap: settlement-meta and 1inch</h2>
+<h3>11.1 NovaONE / NRW (settlement-meta)</h3>
+<p>If the selected swap chain is 22016 or 33001, <span class="mono">SwapPage</span> renders <span class="mono">MetaSettlementSwap</span>.</p>
+<ul>
+  <li>Status: GET chain status, GET <span class="mono">/swap/status</span>, GET routers, NRW hub when on 33001. Probe API bases until <span class="mono">/chains/nova-one</span> returns JSON.</li>
+  <li>Pairs: <span class="mono">src/lib/nova-one-markets.ts</span> builds Binance-style symbols (e.g. USDC+NOVA → USDCNOVA). SELL if from is base; BUY if from is quote.</li>
+  <li>Quote: POST <span class="mono">/chains/nova-one/markets/quote</span>. Parse <span class="mono">price</span>, <span class="mono">cummulativeQuoteQty</span> / <span class="mono">amountOut</span>.</li>
+  <li>Fallback: USD cross via pegs + CoinGecko, 30 bps haircut, labelled settlement-mid. Used when quote POSTs 503 (observed on Railway hub/quote in August 2026).</li>
+  <li>Execute: this wallet does <b>not</b> submit settlement ledger orders. Copy states ledger execute stays on Nova Bank API.</li>
+</ul>
+<h3>11.2 Public EVM (1inch)</h3>
+<p><span class="mono">src/lib/swap/oneinch.ts</span> — v6 quote + swap tx. Mesh chain IDs including 22016 and 33001 are in the unsupported set so 1inch is never faked there. <span class="mono">globalSwap.ts</span> can point at an in-app global swap URL for mesh chains; NovaONE/NRW UI prefers settlement-meta.</p>
+<p>CORS: GitHub Pages calling Railway may be blocked. Production on novabank.uk should use same-origin <span class="mono">/api/v1</span>.</p>
+
+<h2>12. Bridge</h2>
+<p>Module <span class="mono">src/lib/bridge/</span>: constants, ABIs, route table, token map, history in localStorage, <span class="mono">execute.ts</span> (approve + lock/burn via ethers). UI: Bridge page, panel, review modal, history. Hub/spoke/vault addresses come from the registry — CONFIRM markers must not be guessed. This is separate from settlement-meta tokenization.</p>
+
+<h2>13. Build, brand, and deploy</h2>
+<table>
+  <tr><th>Brand tokens</th><td><span class="mono">branding/brand-tokens.json</span> → <span class="mono">src/lib/brand.generated.ts</span> via <span class="mono">scripts/sync-branding.mjs</span></td></tr>
+  <tr><th>Vite base</th><td><span class="mono">VITE_BASE_PATH</span> in <span class="mono">vite.config.ts</span></td></tr>
+  <tr><th>VPS deploy</th><td><span class="mono">scripts/deploy.ps1</span> — build <span class="mono">/wallet/</span>, scp to <span class="mono">ubuntu@51.75.64.28:/var/www/nova-plus-wallet</span></td></tr>
+  <tr><th>GitHub Pages</th><td>dist-only <span class="mono">gh-pages</span> branch, base <span class="mono">/nova-plus-wallet/</span>. Do not nest Signet.</td></tr>
+  <tr><th>Env example</th><td><span class="mono">.env.example</span> — institutional gate hash, 1inch key, <span class="mono">VITE_NOVA_API_URL</span></td></tr>
+</table>
+<p class="small">On 23 August 2026 the VPS scp from this Windows OpenSSH client failed (host KEX <span class="mono">sntrup761x25519</span>). Pages was updated. novabank.uk/wallet/ may still serve an older JS hash until deploy.ps1 succeeds from WSL or a newer ssh.</p>
+
+<h2>14. Findings and production notes</h2>
+<table>
+  <tr><th>Item</th><th>Severity</th><th>Detail</th></tr>
+  <tr><td>Institutional gate is client-only</td><td>High (if used as real ACL)</td><td>Hash is in the frontend bundle. Hides UI only.</td></tr>
+  <tr><td>Settlement quotes may 503</td><td>Medium</td><td>Wallet falls back to peg/CoinGecko mid. Not a live order book when fallback is used.</td></tr>
+  <tr><td>No in-wallet settlement execute</td><td>Info</td><td>Quotes only on meta rails. Intentional for self-custody SPA.</td></tr>
+  <tr><td>localStorage keystore</td><td>Info</td><td>Standard web-wallet model. XSS would be catastrophic; no extension sandbox.</td></tr>
+  <tr><td>signet-* CSS and storage keys</td><td>Low</td><td>Historical names; product is Nova Plus Wallet.</td></tr>
+  <tr><td>Wallet JSON is not loaded from nova-chains.json at runtime</td><td>Info</td><td>Regenerate <span class="mono">nova-mesh-tokens.ts</span> when the mesh JSON changes.</td></tr>
+  <tr><td>GitHub Pages CORS</td><td>Medium</td><td>Prefer novabank.uk/wallet/ for live API.</td></tr>
+</table>
+
+<h2>15. Appendix — every src TypeScript file</h2>
+<p class="small">Non-blank line counts. 119 files, 10,352 lines.</p>
+<table class="filelist">
+  <tr><th>Lines</th><th>Path</th></tr>
+  <tr><td>122</td><td class="mono">src/App.tsx</td></tr>
+  <tr><td>12</td><td class="mono">src/main.tsx</td></tr>
+  <tr><td>35</td><td class="mono">src/components/ErrorBoundary.tsx</td></tr>
+  <tr><td>235</td><td class="mono">src/components/assets/AssetDetail.tsx</td></tr>
+  <tr><td>58</td><td class="mono">src/components/assets/AssetList.tsx</td></tr>
+  <tr><td>20</td><td class="mono">src/components/banks/BanksButton.tsx</td></tr>
+  <tr><td>101</td><td class="mono">src/components/bridge/BridgeHistory.tsx</td></tr>
+  <tr><td>232</td><td class="mono">src/components/bridge/BridgePanel.tsx</td></tr>
+  <tr><td>61</td><td class="mono">src/components/bridge/BridgeReviewModal.tsx</td></tr>
+  <tr><td>320</td><td class="mono">src/components/common/* (11 files)</td></tr>
+  <tr><td>79</td><td class="mono">src/components/dashboard/PortfolioAnchor.tsx</td></tr>
+  <tr><td>64</td><td class="mono">src/components/fafo/*</td></tr>
+  <tr><td>139</td><td class="mono">src/components/layout/*</td></tr>
+  <tr><td>118</td><td class="mono">src/components/security/*</td></tr>
+  <tr><td>250</td><td class="mono">src/components/settings/*</td></tr>
+  <tr><td>124</td><td class="mono">src/components/swap/MetaSettlementSwap.tsx</td></tr>
+  <tr><td>472</td><td class="mono">src/components/tokens/*</td></tr>
+  <tr><td>263</td><td class="mono">src/components/wallet/*</td></tr>
+  <tr><td>22</td><td class="mono">src/context/ToastContext.tsx</td></tr>
+  <tr><td>287</td><td class="mono">src/context/WalletContext.tsx</td></tr>
+  <tr><td>192</td><td class="mono">src/hooks/useBridge.ts</td></tr>
+  <tr><td>66</td><td class="mono">src/hooks/useChainData.ts</td></tr>
+  <tr><td>18</td><td class="mono">src/hooks/useDisplaySettings.ts</td></tr>
+  <tr><td>102</td><td class="mono">src/hooks/useEnabledChains.ts</td></tr>
+  <tr><td>49</td><td class="mono">src/hooks/useFAFO.ts</td></tr>
+  <tr><td>280</td><td class="mono">src/hooks/useTokenBalances.ts</td></tr>
+  <tr><td>66</td><td class="mono">src/hooks/useTokenTransfer.ts</td></tr>
+  <tr><td>24</td><td class="mono">src/hooks/useVisibleTokenRows.ts</td></tr>
+  <tr><td>135</td><td class="mono">src/lib/accounts.ts</td></tr>
+  <tr><td>44</td><td class="mono">src/lib/activeChain.ts</td></tr>
+  <tr><td>53</td><td class="mono">src/lib/activity.ts</td></tr>
+  <tr><td>224</td><td class="mono">src/lib/chains.ts</td></tr>
+  <tr><td>221</td><td class="mono">src/lib/keystore.ts</td></tr>
+  <tr><td>267</td><td class="mono">src/lib/networks.ts</td></tr>
+  <tr><td>104</td><td class="mono">src/lib/nova-api.ts</td></tr>
+  <tr><td>122</td><td class="mono">src/lib/nova-mesh-tokens.ts</td></tr>
+  <tr><td>65</td><td class="mono">src/lib/nova-one-markets.ts</td></tr>
+  <tr><td>206</td><td class="mono">src/lib/prices.ts</td></tr>
+  <tr><td>76</td><td class="mono">src/lib/settlement-meta.ts</td></tr>
+  <tr><td>194</td><td class="mono">src/lib/swap/metaSettlement.ts</td></tr>
+  <tr><td>110</td><td class="mono">src/lib/swap/oneinch.ts</td></tr>
+  <tr><td>30</td><td class="mono">src/lib/swap/globalSwap.ts</td></tr>
+  <tr><td>231</td><td class="mono">src/lib/tokenlist.ts</td></tr>
+  <tr><td>215</td><td class="mono">src/lib/transfer.ts</td></tr>
+  <tr><td>641</td><td class="mono">src/lib/bridge/* (6 files)</td></tr>
+  <tr><td>1,833</td><td class="mono">src/pages/* (14 files, excl. settings)</td></tr>
+  <tr><td>961</td><td class="mono">src/pages/settings/* (14 files)</td></tr>
+  <tr><td>23</td><td class="mono">src/types/index.ts</td></tr>
+</table>
+<p>Supporting non-src: <span class="mono">public/nova-chains.json</span>, <span class="mono">public/manifest.json</span>, <span class="mono">vite.config.ts</span>, <span class="mono">scripts/deploy.ps1</span>, <span class="mono">scripts/gen-mesh-tokens.cjs</span>, <span class="mono">scripts/sync-branding.mjs</span>, <span class="mono">branding/</span>.</p>
+<p class="meta">End of report · Generated 23 August 2026 from commit 0e0b360 on release/v1.0.0 · Nova Plus Wallet</p>
+</body>
+</html>

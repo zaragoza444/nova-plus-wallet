@@ -1,8 +1,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Signet — chain registry (with Defi Oracle 138 tokens populated)
+// Nova Plus Wallet — chain registry.
 // Real values from the live mesh config + verified on-chain token addresses.
 // CONFIRM markers = values not yet sourced; they fail loud rather than guess.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import {
+  NOVA_ONE_SWAP_ROUTER,
+  NOVA_ONE_TOKENS,
+  NRW_WORLD_SWAP_ROUTER,
+  NRW_WORLD_TOKENS,
+} from "./nova-mesh-tokens";
 
 const CONFIRM = "NEEDS_CONFIRM" as const;
 
@@ -20,13 +27,20 @@ export interface TokenDef {
   symbol: string;
   name: string;
   decimals: number;
-  /** null = the chain's native gas token */
+  /** null = native gas, or a meta-settlement token with no local ERC-20 */
   address: string | null;
-  standard?: "native" | "erc20";
+  standard?: "native" | "erc20" | "meta";
   /** fixed USD price (stablecoin peg). If omitted, priced via CoinGecko / oracle. */
   usd?: number;
   /** CoinGecko API id for live USD pricing when not pegged. */
   coingeckoId?: string;
+  /** Tokenized via Nova settlement meta (m2) + wrap / ALLTRA canonical contract. */
+  tokenized?: boolean;
+  settlement?: "meta";
+  liquidity?: "nova-settlement-meta";
+  /** Canonical tokenized ERC-20 (ALLTRA 651940 or Anaka wrap 11013). */
+  tokenizedAddress?: string;
+  tokenizedChainId?: number;
 }
 
 export type ChainCategory = "anaka" | "partner" | "public";
@@ -45,6 +59,9 @@ export interface ChainDef {
   isDefault: boolean;
   isInternal: boolean;
   bridge?: { address: string };
+  swapRouter?: string;
+  settlement?: "meta";
+  liquidity?: "nova-settlement-meta";
   tokens: TokenDef[];
 }
 
@@ -72,24 +89,30 @@ const DEFI_ORACLE_TOKENS: TokenDef[] = [
 export const CHAINS: ChainDef[] = [
   {
     id: 22016, name: "NovaONE", slug: "novaone",
-    nativeCurrency: { name: "NovaONE", symbol: "NOVA", decimals: 18 },
+    nativeCurrency: { name: "NovaONE", symbol: "NOVA", decimals: 18, usd: 1 },
     rpcUrls: [
       "https://novabank.uk/novaone-rpc/",
     ],
     blockExplorerUrls: ["https://novabank.uk"],
     iconColor: "#5B8DEF", category: "anaka", tier: "private-banking", isDefault: true, isInternal: false,
-    tokens: [{ symbol: "NOVA", name: "NovaONE Native", decimals: 18, address: null, standard: "native" }],
+    swapRouter: NOVA_ONE_SWAP_ROUTER,
+    settlement: "meta",
+    liquidity: "nova-settlement-meta",
+    tokens: NOVA_ONE_TOKENS,
   },
   {
     id: 33001, name: "NRW World", slug: "nrw-world",
-    nativeCurrency: { name: "NRW World", symbol: "NRW", decimals: 18 },
+    nativeCurrency: { name: "NRW World", symbol: "NRW", decimals: 18, usd: 1 },
     rpcUrls: [
       "https://novabank.uk/nrw-rpc/",
       "https://nrw-world-chain-production-6029.up.railway.app",
     ],
     blockExplorerUrls: ["https://novabank.uk"],
     iconColor: "#A855F7", category: "partner", tier: "partner", isDefault: true, isInternal: false,
-    tokens: [{ symbol: "NRW", name: "NRW World Native", decimals: 18, address: null, standard: "native" }],
+    swapRouter: NRW_WORLD_SWAP_ROUTER,
+    settlement: "meta",
+    liquidity: "nova-settlement-meta",
+    tokens: NRW_WORLD_TOKENS,
   },
   {
     id: 9001, name: "Nova Production", slug: "nova-production",

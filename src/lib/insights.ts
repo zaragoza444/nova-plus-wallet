@@ -23,8 +23,8 @@ export const INSIGHTS = {
     body: "Senders must use the same chain you select here. Wrong-network deposits may be unrecoverable.",
   },
   swap: {
-    title: "Slippage & liquidity",
-    body: "Low-liquidity pairs may need higher slippage. Quotes come from 1inch — not available on mesh-only chains.",
+    title: "Settlement meta liquidity",
+    body: "NovaONE and NRW World quotes use Nova settlement meta (m2) liquidity hubs. Public EVM pairs still quote through 1inch.",
     action: { label: "Bridge instead", to: "/app/bridge" },
   },
   bridge: {

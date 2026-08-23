@@ -25,12 +25,17 @@ import {
   unsupportedNetworkLabel,
 } from "../lib/swap/oneinch";
 import { usesGlobalSwap } from "../lib/swap/globalSwap";
+import { isSettlementMetaChain, SETTLEMENT_META_CHAIN_IDS } from "../lib/settlement-meta";
+import { MetaSettlementSwap } from "../components/swap/MetaSettlementSwap";
 import type { TokenConfig } from "../types";
 
 const SLIPPAGE_OPTS = [0.1, 0.5, 1] as const;
 
 function defaultSwapChain(current: number, enabledIds: number[]): number {
+  if (isSettlementMetaChain(current) && enabledIds.includes(current)) return current;
   if (isOneInchSwapAvailable(current) && enabledIds.includes(current)) return current;
+  const meta = SETTLEMENT_META_CHAIN_IDS.find((id) => enabledIds.includes(id));
+  if (meta) return meta;
   const first = ONEINCH_CHAIN_IDS.find((id) => enabledIds.includes(id));
   return first ?? 1;
 }
@@ -43,7 +48,10 @@ export function SwapPage(): JSX.Element {
 
   const swapNetworks = useMemo(
     () =>
-      ONEINCH_CHAIN_IDS.filter((id) => enabledIds.includes(id)).map((id) => getChain(id)).filter(Boolean),
+      [...SETTLEMENT_META_CHAIN_IDS, ...ONEINCH_CHAIN_IDS]
+        .filter((id) => enabledIds.includes(id))
+        .map((id) => getChain(id))
+        .filter(Boolean),
     [enabledIds],
   );
 
@@ -60,6 +68,7 @@ export function SwapPage(): JSX.Element {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const swapAvailable = isOneInchSwapAvailable(swapChainId);
+  const metaSwap = isSettlementMetaChain(swapChainId);
   const walletUnsupported = isOneInchUnsupportedNetwork(chainId);
   const tokens: TokenConfig[] = useMemo(
     () => (swapAvailable ? getSwapTokens(swapChainId) : []),
@@ -68,6 +77,7 @@ export function SwapPage(): JSX.Element {
 
   useEffect(() => {
     setSwapChainId((prev) => {
+      if (isSettlementMetaChain(prev) && enabledIds.includes(prev)) return prev;
       if (isOneInchSwapAvailable(prev) && enabledIds.includes(prev)) return prev;
       return defaultSwapChain(chainId, enabledIds);
     });
@@ -76,7 +86,7 @@ export function SwapPage(): JSX.Element {
   useEffect(() => {
     const cid = Number(searchParams.get("chainId"));
     const tokenAddr = searchParams.get("token");
-    if (Number.isFinite(cid) && isOneInchSwapAvailable(cid)) {
+    if (Number.isFinite(cid) && (isOneInchSwapAvailable(cid) || isSettlementMetaChain(cid))) {
       setSwapChainId(cid);
       setChainId(cid);
     }
@@ -222,11 +232,11 @@ export function SwapPage(): JSX.Element {
       <PageHeader
         eyebrow="Swap"
         title="Swap tokens"
-        description="1inch on public EVM · Global Swap for popular ETH/BNB/TRX ↔ Nova/ALLTRA."
+        description="Nova settlement meta on NovaONE & NRW World · 1inch on public EVM."
       />
       <AIInsight {...INSIGHTS.swap} className="reveal reveal-1" />
 
-      {(walletUnsupported || usesGlobalSwap(chainId)) && (
+      {(walletUnsupported || usesGlobalSwap(chainId)) && !metaSwap && (
         <div className="rounded-2xl border border-signet-gold/40 bg-signet-gold/5 px-4 py-3 text-sm reveal reveal-1">
           <p className="font-semibold text-signet-gold">Nova / ALLTRA Global Swap</p>
           <p className="mt-1 text-signet-muted">
@@ -248,7 +258,7 @@ export function SwapPage(): JSX.Element {
         </div>
       )}
 
-      {!oneinchConfigured() && (
+      {!oneinchConfigured() && !metaSwap && (
         <div className="glass-card border border-signet-warning/30 p-4 reveal reveal-1">
           <p className="text-sm font-semibold text-signet-warning">1inch API key required</p>
           <p className="mt-1 text-sm text-signet-muted">
@@ -259,7 +269,25 @@ export function SwapPage(): JSX.Element {
         </div>
       )}
 
-      {!swapAvailable ? (
+      {metaSwap ? (
+        <div className="space-y-4 reveal reveal-1">
+          <label className="block">
+            <span className="text-[11px] font-medium text-signet-muted">Network</span>
+            <select
+              className="mt-1.5 w-full min-h-[48px] rounded-xl border border-signet-border bg-signet-bg px-3.5 text-sm text-signet-text focus:border-signet-gold/50 focus:outline-none"
+              value={swapChainId}
+              onChange={(e) => handleNetworkChange(Number(e.target.value))}
+            >
+              {swapNetworks.map((c) => (
+                <option key={c!.id} value={c!.id}>
+                  {c!.name} ({c!.id})
+                </option>
+              ))}
+            </select>
+          </label>
+          <MetaSettlementSwap chainId={swapChainId} />
+        </div>
+      ) : !swapAvailable ? (
         <EmptyState
           icon="⇄"
           title="Swap unavailable"

@@ -1,6 +1,7 @@
 import { ConnectWallet } from "../components/wallet/ConnectWallet";
 import { TokenList } from "../components/tokens/TokenList";
 import { AddTokenForm } from "../components/tokens/AddTokenForm";
+import { MeshTokenCatalog } from "../components/tokens/MeshTokenCatalog";
 import { SearchTokens } from "../components/tokens/SearchTokens";
 import { ManageHiddenTokens } from "../components/tokens/ManageHiddenTokens";
 import { PageHeader } from "../components/common/PageHeader";
@@ -16,13 +17,14 @@ export function Tokens(): JSX.Element {
       <PageHeader
         eyebrow="Tokens"
         title="All tokens"
-        description="Multi-chain balances with live pricing. Refreshes every 15 seconds."
+        description="Imported NovaONE and NRW World catalogs plus live ERC-20 balances. Refreshes every 15 seconds."
       />
       <div className="space-y-6">
         <div className="reveal reveal-1">
           <TokenList address={address} />
         </div>
         <div className="reveal reveal-2 space-y-4">
+          <MeshTokenCatalog />
           <SearchTokens />
           <AddTokenForm />
         </div>

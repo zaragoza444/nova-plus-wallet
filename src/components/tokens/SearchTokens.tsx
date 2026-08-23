@@ -5,6 +5,7 @@ import { searchListedTokens, addWatchedToken, type ListedToken } from "../../lib
 import { addUserTokenByAddress } from "../../lib/usertokens";
 import { getAllChains } from "../../lib/networks";
 import { isAddress } from "ethers";
+import { isSettlementMetaChain } from "../../lib/settlement-meta";
 
 export function SearchTokens(): JSX.Element {
   const { pushToast } = useToast();
@@ -52,6 +53,17 @@ export function SearchTokens(): JSX.Element {
 
   const addListed = async (token: ListedToken) => {
     if (!chain || !rpc || rpc === "NEEDS_CONFIRM") return;
+    const registry = chain.tokens.find((t) => t.symbol.toUpperCase() === token.symbol.toUpperCase());
+    if (isSettlementMetaChain(chain.id) && registry && registry.standard !== "erc20") {
+      pushToast({
+        title: "Already in catalog",
+        body: `${token.symbol} is tokenized via Nova settlement meta on ${chain.name}.`,
+        tone: "success",
+      });
+      setResults([]);
+      setQuery("");
+      return;
+    }
     setBusy(true);
     const result = await addUserTokenByAddress(chain.id, rpc, token.address);
     setBusy(false);
@@ -101,7 +113,7 @@ export function SearchTokens(): JSX.Element {
       {results.length > 0 && (
         <ul className="divide-y divide-signet-border rounded-xl border border-signet-border">
           {results.map((t) => (
-            <li key={t.address}>
+            <li key={`${t.symbol}-${t.address}`}>
               <button
                 type="button"
                 className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left hover:bg-signet-surface"

@@ -10,7 +10,8 @@ const UNSUPPORTED_CHAIN_IDS = new Set([
   138, // Defi Oracle Meta
   651940, // ALLTRA
   11011, 11012, 11013, 11014, 11015, // Anaka mesh layers
-  22016, // NovaOne
+  22016, // NovaONE
+  33001, // NRW World
   0, // OneX placeholder
 ]);
 

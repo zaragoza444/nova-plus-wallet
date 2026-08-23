@@ -159,6 +159,25 @@ export function isPublicEvmChain(chainId: number): boolean {
   return false;
 }
 
+function registryListedTokens(chainId: number): ListedToken[] {
+  const chain = CHAINS.find((c) => c.id === chainId);
+  if (!chain) return [];
+  const out: ListedToken[] = [];
+  for (const t of chain.tokens) {
+    if (t.standard === "native") continue;
+    const address = t.address || t.tokenizedAddress;
+    if (!address) continue;
+    out.push({
+      symbol: t.symbol,
+      name: t.name,
+      decimals: t.decimals,
+      address,
+      coingeckoId: t.coingeckoId,
+    });
+  }
+  return out;
+}
+
 /** Search trusted token list by name or symbol (case-insensitive). */
 export async function searchListedTokens(
   chainId: number,
@@ -167,8 +186,13 @@ export async function searchListedTokens(
 ): Promise<ListedToken[]> {
   const q = query.trim().toLowerCase();
   if (!q || q.startsWith("0x")) return [];
-  const full = await getListedTokens(chainId);
-  const matches = full.filter(
+  const remote = await getListedTokens(chainId);
+  const byAddr = new Map<string, ListedToken>();
+  for (const t of [...registryListedTokens(chainId), ...remote]) {
+    const key = `${t.symbol.toLowerCase()}:${t.address.toLowerCase()}`;
+    if (!byAddr.has(key)) byAddr.set(key, t);
+  }
+  const matches = [...byAddr.values()].filter(
     (t) => t.symbol.toLowerCase().includes(q) || t.name.toLowerCase().includes(q),
   );
   return matches.slice(0, limit);

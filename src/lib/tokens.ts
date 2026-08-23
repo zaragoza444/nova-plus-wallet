@@ -48,7 +48,7 @@ export function resolveToken(chainId: number, symbol: string): ResolvedToken | n
     symbol: token.symbol,
     name: token.name,
     decimals: token.decimals,
-    address: token.address ?? undefined,
+    address: token.address ?? token.tokenizedAddress ?? undefined,
     usd: token.usd,
     coingeckoId: token.coingeckoId,
     iconColor: chain.iconColor,

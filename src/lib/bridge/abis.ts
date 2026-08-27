@@ -1,3 +1,11 @@
+/** NovaBridgeGateway on NovaONE (22016) and NRW World (33001). */
+export const NOVA_GATEWAY_ABI = [
+  "function lock(address token, uint256 amount, uint256 destChainId, address recipient) external returns (uint256)",
+  "function paused() view returns (bool)",
+  "function supportedDestination(uint256 destChainId) view returns (bool)",
+  "event BridgeInitiated(uint256 indexed nonce, address indexed token, address indexed sender, address recipient, uint256 amount, uint256 sourceChainId, uint256 destChainId)",
+] as const;
+
 /** BridgeHub on ALLTRA (651940) — lock to mint on spokes; relayer unlocks on burn proofs. */
 export const BRIDGE_HUB_ABI = [
   "function lock(uint256 amount, uint256 targetChainId, bytes32 recipient) external",

@@ -1,5 +1,5 @@
 import { getChain } from "../chains";
-import { refreshVaultRequestStatus } from "./execute";
+import { refreshNovaGatewayStatus, refreshVaultRequestStatus } from "./execute";
 import { BRIDGE_VAULT_CHAIN_ID } from "./constants";
 import type { BridgePathKind } from "./routes";
 
@@ -94,10 +94,17 @@ export async function pollBridgeRecordStatuses(): Promise<void> {
   let changed = false;
   const next = await Promise.all(
     records.map(async (r) => {
-      if (r.pathKind !== "vault_outbound" || !r.bridgeNonce) return r;
       if (r.status === "executed" || r.status === "rejected" || r.status === "failed") return r;
-      if (r.fromChainId !== BRIDGE_VAULT_CHAIN_ID) return r;
+      if (!r.bridgeNonce) return r;
 
+      if (r.pathKind === "nova_lock_release") {
+        const fresh = await refreshNovaGatewayStatus(r.fromChainId, r.bridgeNonce);
+        if (!fresh || (fresh.status === r.status && fresh.detail === r.statusDetail)) return r;
+        changed = true;
+        return { ...r, status: fresh.status, statusDetail: fresh.detail, updatedAt: Date.now() };
+      }
+
+      if (r.pathKind !== "vault_outbound" || r.fromChainId !== BRIDGE_VAULT_CHAIN_ID) return r;
       const fresh = await refreshVaultRequestStatus(r.bridgeNonce);
       if (!fresh || (fresh.status === r.status && fresh.detail === r.statusDetail)) return r;
       changed = true;

@@ -11,7 +11,7 @@ export function Bridge(): JSX.Element {
       <PageHeader
         eyebrow="Bridge"
         title="Cross-chain bridge"
-        description="Lock or burn on the source portal; mesh relayers mint or release on the destination."
+        description="Lock or burn on the source portal; mesh relayers mint or release on the destination. Also available at novabank.uk/bridge."
       />
       <AIInsight {...INSIGHTS.bridge} className="reveal reveal-1" />
       <div className="reveal reveal-1">

@@ -159,6 +159,10 @@ export function isPublicEvmChain(chainId: number): boolean {
   return false;
 }
 
+export function registryTokensForChain(chainId: number): ListedToken[] {
+  return registryListedTokens(chainId);
+}
+
 function registryListedTokens(chainId: number): ListedToken[] {
   const chain = CHAINS.find((c) => c.id === chainId);
   if (!chain) return [];

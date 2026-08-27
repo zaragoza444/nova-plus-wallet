@@ -14,8 +14,8 @@ import {
   type BridgeExecuteParams,
   type BridgePreview,
 } from "../lib/bridge/execute";
-import { evaluateBridgeRoute, getBridgePortalChains, type BridgeRouteResult } from "../lib/bridge/routes";
-import { bridgeTokensForRoute, type BridgeToken } from "../lib/bridge/tokens";
+import { evaluateBridgeRoute, getBridgePickerChains, type BridgeRouteResult } from "../lib/bridge/routes";
+import { bridgeTokensForRoute, catalogTokensForPair, type CatalogBridgeToken } from "../lib/bridge/tokens";
 import { useEnabledChains } from "./useEnabledChains";
 
 export type BridgePhase = "idle" | "loading_balance" | "executing";
@@ -24,16 +24,16 @@ export function useBridge() {
   const { address, setChainId } = useWalletContext();
   const { enabledIds } = useEnabledChains();
   const [records, setRecords] = useState<BridgeRecord[]>(() => getBridgeRecords());
-  const [fromChainId, setFromChainId] = useState(651940);
-  const [toChainId, setToChainId] = useState(138);
-  const [token, setToken] = useState<BridgeToken | null>(null);
+  const [fromChainId, setFromChainId] = useState(22016);
+  const [toChainId, setToChainId] = useState(33001);
+  const [token, setToken] = useState<CatalogBridgeToken | null>(null);
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [balanceWei, setBalanceWei] = useState<bigint>(0n);
   const [phase, setPhase] = useState<BridgePhase>("idle");
   const [preview, setPreview] = useState<BridgePreview | null>(null);
 
-  const portalChains = useMemo(() => getBridgePortalChains(), []);
+  const portalChains = useMemo(() => getBridgePickerChains(), []);
 
   useEffect(() => {
     if (!portalChains.length) return;
@@ -51,10 +51,16 @@ export function useBridge() {
     [fromChainId, toChainId, enabledIds],
   );
 
-  const availableTokens = useMemo(() => {
-    if (!route.ok) return [];
-    return bridgeTokensForRoute(fromChainId, route.pathKind);
-  }, [route, fromChainId]);
+  const availableTokens: CatalogBridgeToken[] = useMemo(() => {
+    if (route.ok && route.pathKind !== "nova_lock_release") {
+      return bridgeTokensForRoute(fromChainId, toChainId, route.pathKind).map((t) => ({
+        ...t,
+        lockable: true,
+        detail: route.description,
+      }));
+    }
+    return catalogTokensForPair(fromChainId, toChainId);
+  }, [route, fromChainId, toChainId]);
 
   useEffect(() => {
     if (!availableTokens.length) {
@@ -62,8 +68,8 @@ export function useBridge() {
       return;
     }
     setToken((prev) => {
-      if (prev && availableTokens.some((t) => t.address === prev.address)) return prev;
-      return availableTokens[0] ?? null;
+      if (prev && availableTokens.some((t) => t.symbol === prev.symbol && t.address === prev.address)) return prev;
+      return availableTokens.find((t) => t.lockable) ?? availableTokens[0] ?? null;
     });
   }, [availableTokens]);
 
@@ -81,7 +87,7 @@ export function useBridge() {
   }, []);
 
   useEffect(() => {
-    if (!address || !token || !route.ok) {
+    if (!address || !token?.address || !route.ok) {
       setBalanceWei(0n);
       return;
     }
@@ -126,6 +132,9 @@ export function useBridge() {
 
   const prepareReview = useCallback(async (): Promise<{ ok: true } | { ok: false; message: string }> => {
     if (!route.ok) return { ok: false, message: route.reason };
+    if (token && route.pathKind === "nova_lock_release" && !token.lockable) {
+      return { ok: false, message: token.detail };
+    }
     const params = buildParams();
     if (!params) return { ok: false, message: "Select a token and amount." };
     const result = validateBridgeInput(params, route.label);
@@ -168,7 +177,9 @@ export function useBridge() {
           ? "pending_validation"
           : "submitted",
       statusDetail: result.pendingRelayer
-        ? "Source transaction confirmed. Mesh relayer will mint or release on the destination chain."
+        ? route.pathKind === "nova_lock_release"
+          ? "Source lock confirmed. Bank relayer will release on the destination gateway."
+          : "Source transaction confirmed. Mesh relayer will mint or release on the destination chain."
         : "Vault outbound request created. Validators will release after quorum.",
     });
     setRecords(getBridgeRecords());

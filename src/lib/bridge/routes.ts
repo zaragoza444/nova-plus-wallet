@@ -2,12 +2,18 @@ import { getAllChains, type ChainDef } from "../networks";
 import {
   BRIDGE_HUB_CHAIN_ID,
   BRIDGE_VAULT_CHAIN_ID,
+  NOVA_MESH_BRIDGE_IDS,
   SUPER_BRIDGE_SPOKE_IDS,
 } from "./constants";
 
 const CONFIRM = "NEEDS_CONFIRM";
 
-export type BridgePathKind = "hub_lock_mint" | "spoke_burn_release" | "vault_outbound";
+export type BridgePathKind =
+  | "hub_lock_mint"
+  | "spoke_burn_release"
+  | "vault_outbound"
+  | "nova_lock_release"
+  | "catalog_lock";
 
 export interface BridgeRoute {
   ok: true;
@@ -25,6 +31,8 @@ export interface BridgeRouteDisabled {
 
 export type BridgeRouteResult = BridgeRoute | BridgeRouteDisabled;
 
+const PUBLIC_BRIDGE_PICKER_IDS = [22016, 33001, 651940, 1, 56, 8453, 42161];
+
 /** Chains that expose a registry `bridge.address` and are usable from the browser wallet. */
 export function getBridgePortalChains(): ChainDef[] {
   return getAllChains().filter((c) => {
@@ -34,6 +42,15 @@ export function getBridgePortalChains(): ChainDef[] {
     if (c.isInternal && c.id !== BRIDGE_VAULT_CHAIN_ID) return false;
     return true;
   });
+}
+
+/** Portal chains plus public EVMs shown in the picker (Super Bridge / pending). */
+export function getBridgePickerChains(): ChainDef[] {
+  const portals = getBridgePortalChains();
+  const extra = getAllChains().filter(
+    (c) => PUBLIC_BRIDGE_PICKER_IDS.includes(c.id) && !portals.some((p) => p.id === c.id),
+  );
+  return [...portals, ...extra];
 }
 
 export function isBridgeChainReachable(chainId: number, enabledIds: number[]): boolean {
@@ -61,11 +78,26 @@ export function evaluateBridgeRoute(
   if (!fromChain) return { ok: false, reason: "Unknown source network." };
   if (!toChain) return { ok: false, reason: "Unknown destination network." };
 
+  const catalogPair =
+    PUBLIC_BRIDGE_PICKER_IDS.includes(fromChainId) || PUBLIC_BRIDGE_PICKER_IDS.includes(toChainId);
+
   if (!fromChain.bridge?.address) {
+    if (catalogPair) {
+      return {
+        ok: false,
+        reason: `Wallet lock needs a NovaBridgeGateway on ${fromChain.name}. ${fromChain.name} → ${toChain.name} is in the catalog. Live lock/release is NovaONE ↔ NRW.`,
+      };
+    }
     return { ok: false, reason: `No bridge portal deployed on ${fromChain.name}.` };
   }
 
   if (!isBridgeChainReachable(fromChainId, enabledIds)) {
+    if (catalogPair && !NOVA_MESH_BRIDGE_IDS.includes(fromChainId)) {
+      return {
+        ok: false,
+        reason: `Wallet lock needs a NovaBridgeGateway on ${fromChain.name}. ${fromChain.name} → ${toChain.name} is in the catalog. Live lock/release is NovaONE ↔ NRW.`,
+      };
+    }
     if (fromChain.isInternal && fromChainId !== BRIDGE_VAULT_CHAIN_ID) {
       return {
         ok: false,
@@ -83,6 +115,26 @@ export function evaluateBridgeRoute(
       ok: false,
       reason:
         "Inbound mint on AnakaChain Bridge is validator-gated. Lock on the source chain first; mesh operators submit the inbound request after confirmation.",
+    };
+  }
+
+  if (NOVA_MESH_BRIDGE_IDS.includes(fromChainId) && NOVA_MESH_BRIDGE_IDS.includes(toChainId)) {
+    if (!toChain.bridge?.address) {
+      return { ok: false, reason: `No bridge gateway deployed on ${toChain.name}.` };
+    }
+    if (!isBridgeChainReachable(toChainId, enabledIds)) {
+      return {
+        ok: false,
+        reason: `Enable ${toChain.name} in Settings → Networks to receive a NovaONE ↔ NRW lock.`,
+      };
+    }
+    return {
+      ok: true,
+      pathKind: "nova_lock_release",
+      label: "Lock → Release",
+      description: `Lock ERC-20 on ${fromChain.name} (${shortAddr(fromChain.bridge.address)}). Bank relayer releases the paired token on ${toChain.name}.`,
+      fromChain,
+      toChain,
     };
   }
 
@@ -149,9 +201,16 @@ export function evaluateBridgeRoute(
     };
   }
 
+  if ([1, 56, 8453, 42161, 651940].includes(fromChainId) || [1, 56, 8453, 42161, 651940].includes(toChainId)) {
+    return {
+      ok: false,
+      reason: `Wallet lock needs a NovaBridgeGateway on both chains. ${fromChain.name} → ${toChain.name} is in the catalog. Live lock/release is NovaONE ↔ NRW. Bank Super Bridge stays on novabank.uk/bridge.`,
+    };
+  }
+
   return {
     ok: false,
-    reason: "This network pair is not supported by the Anakatech mesh bridge.",
+    reason: "This network pair is not a live wallet lock route. Pick NovaONE ↔ NRW, or use the imported token catalog to see what is missing.",
   };
 }
 

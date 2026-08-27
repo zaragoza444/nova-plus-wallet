@@ -146,27 +146,28 @@ export function BridgePanel(): JSX.Element {
           </div>
         )}
 
-        {route.ok && availableTokens.length > 0 && (
+        {availableTokens.length > 0 && (
           <>
-            {availableTokens.length > 1 && (
-              <label className="block space-y-1.5">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-signet-muted">Asset</span>
-                <select
-                  className="w-full rounded-xl border border-signet-border bg-signet-surface px-3 py-2.5 text-sm"
-                  value={token?.address ?? ""}
-                  onChange={(e) => {
-                    const t = availableTokens.find((x) => x.address === e.target.value);
-                    if (t) setToken(t);
-                  }}
-                >
-                  {availableTokens.map((t) => (
-                    <option key={t.address} value={t.address}>
-                      {t.symbol}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
+            <label className="block space-y-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-signet-muted">Token</span>
+              <select
+                className="w-full rounded-xl border border-signet-border bg-signet-surface px-3 py-2.5 text-sm"
+                value={token ? `${token.symbol}:${token.address}` : ""}
+                onChange={(e) => {
+                  const t = availableTokens.find((x) => `${x.symbol}:${x.address}` === e.target.value);
+                  if (t) setToken(t);
+                }}
+              >
+                {availableTokens.map((t) => (
+                  <option key={`${t.symbol}:${t.address}`} value={`${t.symbol}:${t.address}`}>
+                    {t.symbol} — {t.lockable ? "lockable" : "catalog"}
+                  </option>
+                ))}
+              </select>
+              {token && (
+                <span className="block text-[11px] text-signet-muted">{token.detail}</span>
+              )}
+            </label>
 
             <label className="block space-y-1.5">
               <div className="flex items-center justify-between">
@@ -214,7 +215,13 @@ export function BridgePanel(): JSX.Element {
         <button
           type="button"
           className="btn-primary w-full"
-          disabled={!address || !route.ok || busy || phase === "loading_balance"}
+          disabled={
+            !address
+            || !route.ok
+            || busy
+            || phase === "loading_balance"
+            || (route.ok && route.pathKind === "nova_lock_release" && !token?.lockable)
+          }
           onClick={() => void openReview()}
         >
           {busy ? (

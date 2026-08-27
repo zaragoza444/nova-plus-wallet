@@ -9,6 +9,9 @@ export const NOVA_ONE_SWAP_ROUTER = "0xEd04ee8307C0656207af5afe3926Ae2380052940"
 export const NRW_WORLD_SWAP_ROUTER = "0xEd04ee8307C0656207af5afe3926Ae2380052940" as const;
 export const NOVA_ONE_WRAPPED_BRIDGE = "0x227a6f3EEF2df576bc127dF0326D1F4B6f0ce9Cb" as const;
 export const NRW_WORLD_WRAPPED_BRIDGE = "0xf2811B06807acF321FF9056dF668a621772999d8" as const;
+/** NovaBridgeGateway on NovaONE 22016 / NRW World 33001. */
+export const NOVA_ONE_BRIDGE_GATEWAY = "0xcf61e9cd18ce67af2a3df919e5fc6087c480757e" as const;
+export const NRW_WORLD_BRIDGE_GATEWAY = "0x6c428b3f2da61a201a342766f860418ff8541c65" as const;
 
 export const NOVA_ONE_TOKENS: TokenDef[] = [
   { symbol: "NOVA", name: "NovaONE Native", decimals: 18, address: null, standard: "native", usd: 1 },

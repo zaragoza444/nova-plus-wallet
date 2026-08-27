@@ -8,14 +8,16 @@ import {
   type TransactionReceipt,
 } from "ethers";
 import { getChain } from "../chains";
+import { fetchNovaBridgeOutbound } from "../nova-api";
 import { connectActiveWallet, txExplorerUrl } from "../transfer";
 import {
   BRIDGE_HUB_ABI,
   BRIDGE_SPOKE_ABI,
   BRIDGE_VAULT_ABI,
   ERC20_APPROVE_ABI,
+  NOVA_GATEWAY_ABI,
 } from "./abis";
-import { BRIDGE_VAULT_CHAIN_ID } from "./constants";
+import { BRIDGE_VAULT_CHAIN_ID, NOVA_MESH_BRIDGE_IDS } from "./constants";
 import { externalChainSlug, type BridgePathKind } from "./routes";
 import type { BridgeToken } from "./tokens";
 
@@ -83,7 +85,11 @@ export function validateBridgeInput(
   }
 
   const warnings: string[] = [];
-  if (params.pathKind !== "vault_outbound") {
+  if (params.pathKind === "nova_lock_release") {
+    warnings.push(
+      "Destination credit is released by the Nova Bank relayer after your lock confirms. Track status in Bridge history.",
+    );
+  } else if (params.pathKind !== "vault_outbound") {
     warnings.push(
       "Destination credit is relayed by mesh validators after your source transaction confirms. Track status in Bridge history.",
     );
@@ -138,6 +144,7 @@ function parseNonceFromReceipt(
   const hubIface = new Interface([...BRIDGE_HUB_ABI]);
   const spokeIface = new Interface([...BRIDGE_SPOKE_ABI]);
   const vaultIface = new Interface([...BRIDGE_VAULT_ABI]);
+  const novaIface = new Interface([...NOVA_GATEWAY_ABI]);
 
   for (const log of receipt.logs) {
     if (getAddress(log.address) !== portal) continue;
@@ -153,6 +160,10 @@ function parseNonceFromReceipt(
       if (pathKind === "vault_outbound") {
         const parsed = vaultIface.parseLog(log);
         if (parsed?.name === "BridgeRequestCreated") return String(parsed.args.nonce);
+      }
+      if (pathKind === "nova_lock_release") {
+        const parsed = novaIface.parseLog(log);
+        if (parsed?.name === "BridgeInitiated") return String(parsed.args.nonce);
       }
     } catch {
       /* not our event */
@@ -181,6 +192,28 @@ export async function executeBridge(params: BridgeExecuteParams): Promise<Bridge
   const recipient = getAddress(params.recipient);
 
   try {
+    if (params.pathKind === "nova_lock_release") {
+      const allowance = await ensureAllowance(wallet, params.token.address, portal, amountWei);
+      if (!allowance.ok) return allowance;
+
+      const gateway = new Contract(portal, [...NOVA_GATEWAY_ABI], wallet);
+      const paused = (await gateway.paused()) as boolean;
+      if (paused) return { ok: false, message: "Nova gateway is paused." };
+      const destOk = (await gateway.supportedDestination(params.toChainId)) as boolean;
+      if (!destOk) return { ok: false, message: "Destination chain is not enabled on this gateway." };
+
+      const tx = await gateway.lock(params.token.address, amountWei, params.toChainId, recipient);
+      const receipt = (await tx.wait()) as TransactionReceipt;
+      const hash = receipt.hash;
+      return {
+        ok: true,
+        hash,
+        explorerUrl: txExplorerUrl(fromChain, hash),
+        bridgeNonce: parseNonceFromReceipt(receipt, portal, params.pathKind),
+        pendingRelayer: true,
+      };
+    }
+
     if (params.pathKind === "hub_lock_mint") {
       const allowance = await ensureAllowance(wallet, params.token.address, portal, amountWei);
       if (!allowance.ok) return allowance;
@@ -257,6 +290,22 @@ export async function readBridgeTokenBalance(
   const wallet = connectActiveWallet(chainId);
   const erc20 = new Contract(token.address, [...ERC20_APPROVE_ABI], wallet);
   return (await erc20.balanceOf(owner)) as bigint;
+}
+
+export async function refreshNovaGatewayStatus(
+  sourceChainId: number,
+  nonce: string,
+): Promise<{ status: "pending_relayer" | "executed"; detail: string } | null> {
+  if (!NOVA_MESH_BRIDGE_IDS.includes(sourceChainId)) return null;
+  const outbound = await fetchNovaBridgeOutbound(sourceChainId, nonce);
+  if (!outbound) return null;
+  if (outbound.released) {
+    return { status: "executed", detail: "Destination gateway released the locked tokens." };
+  }
+  return {
+    status: "pending_relayer",
+    detail: `Awaiting bank relayer release on chain ${outbound.destChainId}.`,
+  };
 }
 
 export async function refreshVaultRequestStatus(

@@ -89,6 +89,40 @@ export async function novaPostJson(url: string, body: unknown): Promise<unknown 
   }
 }
 
+export type NovaBridgeOutbound = {
+  sourceChain: "nova-one" | "nrw-world";
+  sourceChainId: number;
+  destChainId: number;
+  nonce: string;
+  token: string;
+  sender: string;
+  recipient: string;
+  amount: string;
+  destChainIdRecorded: number;
+  released: boolean;
+};
+
+export function novaBridgeChainSlug(chainId: number): "nova-one" | "nrw-world" | null {
+  if (chainId === 22016) return "nova-one";
+  if (chainId === 33001) return "nrw-world";
+  return null;
+}
+
+export async function fetchNovaBridgeOutbound(
+  sourceChainId: number,
+  nonce: string,
+): Promise<NovaBridgeOutbound | null> {
+  const slug = novaBridgeChainSlug(sourceChainId);
+  if (!slug || !/^\d+$/.test(nonce)) return null;
+  const base = await resolveNovaApiBase();
+  if (!base) return null;
+  const body = await novaGetJson(`${base}/chains/bridge/outbound/${slug}/${nonce}`);
+  if (!body || typeof body !== "object") return null;
+  const rec = body as Partial<NovaBridgeOutbound>;
+  if (typeof rec.nonce !== "string" || typeof rec.released !== "boolean") return null;
+  return rec as NovaBridgeOutbound;
+}
+
 /** First API base that answers GET /chains/nova-one with production live status. */
 export async function resolveNovaApiBase(): Promise<string | null> {
   if (resolvedBase) return resolvedBase;

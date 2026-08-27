@@ -1,3 +1,6 @@
+/** NovaONE / NRW World relayer gateway pair. */
+export const NOVA_MESH_BRIDGE_IDS: readonly number[] = [22016, 33001];
+
 /** ALL MAINNET hub chain id (Super Bridge). */
 export const BRIDGE_HUB_CHAIN_ID = 651940;
 

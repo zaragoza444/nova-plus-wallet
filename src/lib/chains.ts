@@ -5,8 +5,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import {
+  NOVA_ONE_BRIDGE_GATEWAY,
   NOVA_ONE_SWAP_ROUTER,
   NOVA_ONE_TOKENS,
+  NRW_WORLD_BRIDGE_GATEWAY,
   NRW_WORLD_SWAP_ROUTER,
   NRW_WORLD_TOKENS,
 } from "./nova-mesh-tokens";
@@ -94,11 +96,12 @@ export const CHAINS: ChainDef[] = [
       "https://novabank.uk/novaone-rpc/",
       "https://nova-bank-api-production-7311.up.railway.app/novaone-rpc/",
     ],
-    blockExplorerUrls: ["https://novaone.novablockchainsystem.com/", "https://novabank.uk"],
+    blockExplorerUrls: ["https://novabank.uk/novaone/explorer"],
     iconColor: "#5B8DEF", category: "partner", tier: "partner", isDefault: true, isInternal: false,
     swapRouter: NOVA_ONE_SWAP_ROUTER,
     settlement: "meta",
     liquidity: "nova-settlement-meta",
+    bridge: { address: NOVA_ONE_BRIDGE_GATEWAY },
     tokens: NOVA_ONE_TOKENS,
   },
   {
@@ -108,11 +111,12 @@ export const CHAINS: ChainDef[] = [
       "https://novabank.uk/nrw-rpc/",
       "https://nrw-world-chain-production-6029.up.railway.app",
     ],
-    blockExplorerUrls: ["https://novabank.uk"],
+    blockExplorerUrls: ["https://novabank.uk/nrw/explorer"],
     iconColor: "#A855F7", category: "partner", tier: "partner", isDefault: true, isInternal: false,
     swapRouter: NRW_WORLD_SWAP_ROUTER,
     settlement: "meta",
     liquidity: "nova-settlement-meta",
+    bridge: { address: NRW_WORLD_BRIDGE_GATEWAY },
     tokens: NRW_WORLD_TOKENS,
   },
   {
@@ -194,8 +198,17 @@ export const CHAINS: ChainDef[] = [
       { symbol: "USDC", name: "USD Coin", decimals: 18, address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", standard: "erc20", usd: 1 },
     ],
   },
-  { id: 42161, name: "Arbitrum One", slug: "arbitrum", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" }, rpcUrls: ["https://arbitrum.llamarpc.com"], blockExplorerUrls: ["https://arbiscan.io"], iconColor: "#28A0F0", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [] },
-  { id: 8453, name: "Base", slug: "base", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" }, rpcUrls: ["https://base.llamarpc.com"], blockExplorerUrls: ["https://basescan.org"], iconColor: "#0052FF", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [] },
+  { id: 42161, name: "Arbitrum One", slug: "arbitrum", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" }, rpcUrls: ["https://arbitrum.llamarpc.com"], blockExplorerUrls: ["https://arbiscan.io"], iconColor: "#28A0F0", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [
+      { symbol: "ETH", name: "Ether", decimals: 18, address: null, standard: "native", coingeckoId: "ethereum" },
+      { symbol: "USDC", name: "USD Coin", decimals: 6, address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", standard: "erc20", usd: 1 },
+      { symbol: "USDT", name: "Tether USD", decimals: 6, address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", standard: "erc20", usd: 1 },
+      { symbol: "WETH", name: "Wrapped Ether", decimals: 18, address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", standard: "erc20", coingeckoId: "weth" },
+    ] },
+  { id: 8453, name: "Base", slug: "base", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" }, rpcUrls: ["https://base.llamarpc.com"], blockExplorerUrls: ["https://basescan.org"], iconColor: "#0052FF", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [
+      { symbol: "ETH", name: "Ether", decimals: 18, address: null, standard: "native", coingeckoId: "ethereum" },
+      { symbol: "USDC", name: "USD Coin", decimals: 6, address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", standard: "erc20", usd: 1 },
+      { symbol: "WETH", name: "Wrapped Ether", decimals: 18, address: "0x4200000000000000000000000000000000000006", standard: "erc20", coingeckoId: "weth" },
+    ] },
   { id: 137, name: "Polygon", slug: "polygon", nativeCurrency: { name: "Polygon", symbol: "POL", decimals: 18, coingeckoId: "polygon-ecosystem-token" }, rpcUrls: ["https://polygon.llamarpc.com"], blockExplorerUrls: ["https://polygonscan.com"], iconColor: "#8247E5", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [] },
   { id: 10, name: "Optimism", slug: "optimism", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" }, rpcUrls: ["https://optimism.llamarpc.com"], blockExplorerUrls: ["https://optimistic.etherscan.io"], iconColor: "#FF0420", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [] },
   { id: 43114, name: "Avalanche", slug: "avalanche", nativeCurrency: { name: "Avalanche", symbol: "AVAX", decimals: 18, coingeckoId: "avalanche-2" }, rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"], blockExplorerUrls: ["https://snowtrace.io"], iconColor: "#E84142", category: "public", tier: "world", isDefault: false, isInternal: false, tokens: [] },

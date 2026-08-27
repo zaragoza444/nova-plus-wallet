@@ -62,10 +62,10 @@ export function SettingsSecurityPage(): JSX.Element {
         <p className="mt-1 text-xs text-signet-muted">Password, auto-lock, and recovery phrase access.</p>
       </div>
 
-      <SettingsSection title="Auto-lock" hint="Clears the in-memory signer after idle time. You will need your password to unlock again.">
+      <SettingsSection title="Auto-lock" hint="Optional idle lock. Refresh keeps you signed in. Lock still requires your password.">
         <SettingsRow
           label="Idle timeout"
-          description="Applies while Signet is open in this browser tab."
+          description="Never (default) stays signed in on this device until you tap Lock."
           trailing={
             <select
               className="rounded-lg border border-signet-border bg-signet-surface px-2 py-1.5 text-xs text-signet-text"

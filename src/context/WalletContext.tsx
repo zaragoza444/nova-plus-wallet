@@ -31,6 +31,7 @@ import {
 } from "../lib/activeChain";
 import { isNovaPlusWalletOwner, NOVA_PLUS_WALLET_OWNER } from "../lib/walletOwner";
 import { clearUnlockSession, restoreUnlockSession, writeUnlockSession } from "../lib/unlockSession";
+import { getAutoLockMs } from "../lib/settings";
 
 export type WalletStatus = "no-wallet" | "locked" | "unlocked" | "watch-only";
 export type WalletMode = "local" | "walletconnect" | "watch" | null;
@@ -112,7 +113,7 @@ const WalletCtx = createContext<WalletCtxValue | null>(null);
 
 function bootWallet(): { status: WalletStatus; address: string | null; hd: boolean } {
   if (ks.hasVault()) {
-    const restored = restoreUnlockSession();
+    const restored = restoreUnlockSession(getAutoLockMs());
     if (restored) {
       const derived = deriveAccountAtIndex(restored.root, restored.index);
       activeRootWallet = restored.root;

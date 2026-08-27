@@ -1,6 +1,7 @@
-import { HDNodeWallet, Wallet } from "ethers";
+import { getAddress, HDNodeWallet, Wallet } from "ethers";
 import type { AnyWallet } from "./keystore";
 import { deriveAccountAtIndex } from "./accounts";
+import { getStoredAddress } from "./keystore";
 
 const KEY = "signet.unlock-session.v1";
 
@@ -10,9 +11,34 @@ interface UnlockSession {
   privateKey?: string;
   accountIndex: number;
   address: string;
+  vaultAddress?: string;
+  lastActiveAt?: number;
 }
 
-export function clearUnlockSession(): void {
+function sameAddress(a?: string | null, b?: string | null): boolean {
+  if (!a || !b) return false;
+  try {
+    return getAddress(a) === getAddress(b);
+  } catch {
+    return a.toLowerCase() === b.toLowerCase();
+  }
+}
+
+function readStore(store: Storage | undefined): string | null {
+  if (!store) return null;
+  try {
+    return store.getItem(KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeStore(raw: string): void {
+  try {
+    localStorage.setItem(KEY, raw);
+  } catch {
+    /* ignore quota / private mode */
+  }
   try {
     sessionStorage.removeItem(KEY);
   } catch {
@@ -20,31 +46,80 @@ export function clearUnlockSession(): void {
   }
 }
 
-export function writeUnlockSession(root: AnyWallet, accountIndex: number, address: string): void {
+function readRaw(): string | null {
+  return readStore(localStorage) ?? readStore(sessionStorage);
+}
+
+export function clearUnlockSession(): void {
   try {
-    const mnemonic = root instanceof HDNodeWallet ? root.mnemonic?.phrase : undefined;
-    const session: UnlockSession = {
-      v: 1,
-      mnemonic,
-      privateKey: root.privateKey,
-      accountIndex,
-      address,
-    };
-    sessionStorage.setItem(KEY, JSON.stringify(session));
+    localStorage.removeItem(KEY);
+  } catch {
+    /* ignore */
+  }
+  try {
+    sessionStorage.removeItem(KEY);
   } catch {
     /* ignore */
   }
 }
 
-export function restoreUnlockSession(): { root: AnyWallet; index: number } | null {
+function persist(session: UnlockSession): void {
+  writeStore(JSON.stringify(session));
+}
+
+export function writeUnlockSession(root: AnyWallet, accountIndex: number, address: string): void {
+  const mnemonic = root instanceof HDNodeWallet ? root.mnemonic?.phrase : undefined;
+  persist({
+    v: 1,
+    mnemonic,
+    privateKey: root.privateKey,
+    accountIndex,
+    address,
+    vaultAddress: getStoredAddress() ?? address,
+    lastActiveAt: Date.now(),
+  });
+}
+
+let lastActivityWrite = 0;
+
+/** Keep idle auto-lock in sync across refresh. */
+export function persistUnlockActivity(): void {
+  const now = Date.now();
+  if (now - lastActivityWrite < 5_000) return;
+  lastActivityWrite = now;
+  const raw = readRaw();
+  if (!raw) return;
   try {
-    const raw = sessionStorage.getItem(KEY);
+    const session = JSON.parse(raw) as UnlockSession;
+    if (session.v !== 1) return;
+    persist({ ...session, lastActiveAt: Date.now() });
+  } catch {
+    /* ignore */
+  }
+}
+
+export function restoreUnlockSession(maxIdleMs = 0): { root: AnyWallet; index: number } | null {
+  try {
+    const raw = readRaw();
     if (!raw) return null;
     const session = JSON.parse(raw) as UnlockSession;
     if (session.v !== 1) {
       clearUnlockSession();
       return null;
     }
+
+    const lastActive = session.lastActiveAt ?? 0;
+    if (maxIdleMs > 0 && lastActive > 0 && Date.now() - lastActive > maxIdleMs) {
+      clearUnlockSession();
+      return null;
+    }
+
+    const vaultAddress = getStoredAddress();
+    if (session.vaultAddress && vaultAddress && !sameAddress(session.vaultAddress, vaultAddress)) {
+      clearUnlockSession();
+      return null;
+    }
+
     const index = Number.isFinite(session.accountIndex) ? session.accountIndex : 0;
     let root: AnyWallet;
     const phrase = session.mnemonic?.trim();
@@ -56,7 +131,14 @@ export function restoreUnlockSession(): { root: AnyWallet; index: number } | nul
       clearUnlockSession();
       return null;
     }
-    deriveAccountAtIndex(root, index);
+
+    const derived = deriveAccountAtIndex(root, index);
+    if (session.address && !sameAddress(session.address, derived.address)) {
+      clearUnlockSession();
+      return null;
+    }
+
+    persist({ ...session, lastActiveAt: Date.now(), address: derived.address });
     return { root, index };
   } catch {
     clearUnlockSession();

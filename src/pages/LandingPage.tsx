@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { paths } from "../lib/routes";
 import { brandProductName, brandTagline } from "../lib/brand";
 import { SignetLogo } from "../components/layout/SignetLogo";
 import { NOVA_PLUS_WALLET_OWNER } from "../lib/walletOwner";
+import { useWalletContext } from "../context/WalletContext";
 
 export function LandingPage(): JSX.Element {
   const name = brandProductName();
+  const { status } = useWalletContext();
+
+  if (status === "unlocked") {
+    return <Navigate to={paths.home} replace />;
+  }
+  if (status === "locked") {
+    return <Navigate to="/locked" replace />;
+  }
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-signet-bg px-6 py-10 text-center text-signet-ink grain-overlay">

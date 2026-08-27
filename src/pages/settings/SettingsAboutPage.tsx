@@ -11,8 +11,7 @@ export function SettingsAboutPage(): JSX.Element {
         <h3 className="font-heading text-base font-semibold text-signet-text">About</h3>
         <p className="mt-1 text-xs leading-relaxed text-signet-muted">
           {brandProductName()} is a production self-custody wallet. Your vault is encrypted on this
-          device. After you unlock, this browser tab stays signed in across refresh until you lock
-          it or close the tab.
+          device. After you unlock, this device stays signed in across refresh until you tap Lock.
         </p>
       </div>
       <div className="rounded-2xl border border-signet-border px-4 py-3">

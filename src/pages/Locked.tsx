@@ -1,6 +1,6 @@
 // Signet — Locked screen (real). Decrypt the vault with the password to unlock.
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useWalletContext } from "../context/WalletContext";
 import { paths } from "../lib/routes";
 import { SignetLogo } from "../components/layout/SignetLogo";
@@ -9,10 +9,17 @@ const goldBg = { background: "linear-gradient(135deg,#C9A84C,#E8D48B)" };
 
 export function LockedPage(): JSX.Element {
   const nav = useNavigate();
-  const { unlock } = useWalletContext();
+  const { unlock, status } = useWalletContext();
   const [pw, setPw] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+
+  if (status === "unlocked") {
+    return <Navigate to={paths.home} replace />;
+  }
+  if (status === "no-wallet") {
+    return <Navigate to="/onboarding" replace />;
+  }
 
   const submit = useCallback(async () => {
     setErr("");

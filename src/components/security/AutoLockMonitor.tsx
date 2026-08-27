@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useWalletContext } from "../../context/WalletContext";
 import { getAutoLockMs, subscribeSettingsChanged } from "../../lib/settings";
+import { persistUnlockActivity } from "../../lib/unlockSession";
 
 const ACTIVITY_EVENTS = ["mousedown", "keydown", "touchstart", "scroll", "mousemove"] as const;
 
@@ -44,7 +45,10 @@ export function AutoLockMonitor(): JSX.Element {
       }, ms);
     };
 
-    const onActivity = () => schedule();
+    const onActivity = () => {
+      persistUnlockActivity();
+      schedule();
+    };
 
     schedule();
     for (const ev of ACTIVITY_EVENTS) {

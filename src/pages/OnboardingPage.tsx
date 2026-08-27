@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useWalletContext } from "../context/WalletContext";
 import type { AccountType } from "../lib/keystore";
 import { paths } from "../lib/routes";
@@ -15,7 +15,7 @@ const burgundyBtn = `${primaryBtn} bg-signet-burgundy text-white shadow-burgundy
 
 export function OnboardingPage(): JSX.Element {
   const nav = useNavigate();
-  const { beginCreate, finalizeCreate } = useWalletContext();
+  const { beginCreate, finalizeCreate, status } = useWalletContext();
   const [step, setStep] = useState<Step>("accountType");
   const [accountType, setAccountType] = useState<AccountType>("personal");
   const [mnemonic, setMnemonic] = useState("");
@@ -48,6 +48,13 @@ export function OnboardingPage(): JSX.Element {
   }, [loginPw, loginPw2, accountType, finalizeCreate, nav]);
 
   const words = mnemonic.split(" ");
+
+  if (status === "unlocked") {
+    return <Navigate to={paths.home} replace />;
+  }
+  if (status === "locked") {
+    return <Navigate to="/locked" replace />;
+  }
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-signet-bg px-6 py-10 text-signet-ink grain-overlay">

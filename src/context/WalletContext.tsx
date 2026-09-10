@@ -153,7 +153,10 @@ export function WalletProvider({ children }: { children: React.ReactNode }): JSX
 
   const gateUnlocked = isInstitutionalGateUnlocked();
   const accounts = getAccountManifest().accounts;
-  const banks = gateUnlocked && accountType === "institutional" ? DEFAULT_BANKS : [];
+  const banks =
+    gateUnlocked && accountType === "institutional"
+      ? DEFAULT_BANKS
+      : DEFAULT_BANKS.filter((b) => b.id === "onexbank");
 
   const applyDerivedAccount = useCallback((root: AnyWallet, index: number) => {
     const derived = deriveAccountAtIndex(root, index);

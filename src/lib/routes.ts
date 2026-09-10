@@ -21,6 +21,13 @@ export const paths = {
   settingsFafo: "/app/settings/fafo",
   settingsAbout: "/app/settings/about",
   banks: "/app/banks",
+  onex: "/onex",
+  onexLogin: "/onex/login",
+  onexApp: "/onex/app",
+  onexTransfer: "/onex/app/transfer",
+  onexSwap: "/onex/app/swap",
+  onexChain: "/onex/app/chain",
+  onexCards: "/onex/app/cards",
 };
 export function assetDetail(chainId: number, symbol: string): string {
   return `/app/assets/${chainId}/${encodeURIComponent(symbol)}`;

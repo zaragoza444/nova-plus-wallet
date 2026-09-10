@@ -13,6 +13,7 @@ export const GLOBAL_SWAP_CHAIN_IDS = new Set([
   9001, // Nova Production
   33001, // NRW World
   44001, // Victoria
+  138, // OneX Chain
 ]);
 
 export function usesGlobalSwap(chainId: number): boolean {

@@ -22,5 +22,9 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     allowedHosts: ['novabank.uk', '.novabank.uk', 'localhost'],
+    proxy: {
+      "/api/v1": { target: "http://127.0.0.1:8090", changeOrigin: true },
+      "/onex-rpc": { target: "http://127.0.0.1:8090", changeOrigin: true },
+    },
   },
 });

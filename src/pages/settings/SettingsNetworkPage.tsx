@@ -205,7 +205,7 @@ export function SettingsNetworkPage(): JSX.Element {
       )}
 
       {partnerChains.length > 0 && (
-        <TierSection title="Partner networks" hint="Defi Oracle, ALLTRA, NRW, OneX — toggle when RPC is confirmed.">
+        <TierSection title="Partner networks" hint="OneX Chain 138, Defi Oracle, ALLTRA, NRW — toggle when RPC is confirmed.">
           {partnerChains.map((chain) => (
             <ChainRow
               key={chain.id}

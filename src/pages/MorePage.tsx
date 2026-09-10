@@ -6,6 +6,8 @@ import { paths } from "../lib/routes";
 const links: { to: string; label: string; icon: string; hint: string }[] = [
   { to: paths.tokens, label: "Tokens", icon: "₿", hint: "All token balances" },
   { to: paths.assets, label: "Assets", icon: "🏛", hint: "ATKSH & property" },
+  { to: paths.banks, label: "Banks", icon: "🏦", hint: "OneX Bank + institutional directory" },
+  { to: paths.onex, label: "OneX Bank", icon: "✕", hint: "Online bank · swap · chain 138" },
   { to: paths.bridge, label: "Bridge", icon: "⛓", hint: "Cross-chain mesh" },
   { to: paths.importWallet, label: "Import wallet", icon: "🔑", hint: "Private key → Signet" },
   { to: paths.settingsAccounts, label: "Settings", icon: "⚙", hint: "Accounts & security" },

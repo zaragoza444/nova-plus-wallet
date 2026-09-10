@@ -138,9 +138,13 @@ export const CHAINS: ChainDef[] = [
     tokens: [{ symbol: "AGAS", name: "Anaka Gas", decimals: 18, address: null, standard: "native" }],
   },
   {
-    id: 138, name: "Defi Oracle Meta", slug: "defi-oracle",
-    nativeCurrency: { name: CONFIRM, symbol: CONFIRM, decimals: 18 }, // CONFIRM native symbol
-    rpcUrls: ["https://rpc-http-pub.d-bis.org"],
+    id: 138, name: "OneX Chain", slug: "onex",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18, coingeckoId: "ethereum" },
+    rpcUrls: [
+      "https://rpc.defi-oracle.io",
+      "https://novabank.uk/onex-rpc/",
+      "https://rpc-http-pub.d-bis.org",
+    ],
     blockExplorerUrls: ["https://explorer.d-bis.org"],
     iconColor: "#2DD4BF", category: "partner", tier: "partner", isDefault: true, isInternal: false,
     bridge: { address: "0x8445976FE32257Eb03B1F02e8A11Fd2c0041ce8c" },

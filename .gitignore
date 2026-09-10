@@ -2,3 +2,6 @@
 .DS_Store
 *.local
 *.tsbuildinfo
+server/onex-bank/data/ledger.json
+server/onex-bank/data/master.secret
+server/onex-bank/data/*.tmp

@@ -53,10 +53,16 @@ export function LandingPage(): JSX.Element {
             >
               Swap
             </Link>
+            <Link
+              to={paths.onex}
+              className="rounded-full border border-signet-burgundy-muted/40 bg-signet-burgundy-soft px-4 py-2 text-xs font-medium text-signet-burgundy-bright no-underline"
+            >
+              OneX Bank
+            </Link>
           </div>
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-          {["NovaONE", "NRW", "ALLTRA", "ETH · BNB · TRX"].map((c) => (
+          {["NovaONE", "NRW", "OneX", "ALLTRA", "ETH · BNB · TRX"].map((c) => (
             <span
               key={c}
               className="rounded-full border border-signet-border-glow bg-signet-surface/80 px-3 py-1 text-[11px] text-signet-muted"

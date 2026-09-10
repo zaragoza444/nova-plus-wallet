@@ -12,7 +12,7 @@ const UNSUPPORTED_CHAIN_IDS = new Set([
   11011, 11012, 11013, 11014, 11015, // Anaka mesh layers
   22016, // NovaONE
   33001, // NRW World
-  0, // OneX placeholder
+  138, // OneX Chain / DeFi Oracle Meta
 ]);
 
 /** Public EVM chains 1inch v6 typically aggregates. */

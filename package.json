@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "vite --port 5199 --host 127.0.0.1",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --port 5199"
+    "preview": "vite preview --port 5199",
+    "onex:api": "node server/onex-bank/index.mjs",
+    "test:onex": "node --test server/onex-bank/test.mjs",
+    "dev:onex": "node server/onex-bank/index.mjs"
   },
   "dependencies": {
     "ethers": "^6.17.0",

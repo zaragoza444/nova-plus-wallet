@@ -36,6 +36,15 @@ import { MorePage } from "./pages/MorePage";
 import { ImportWalletPage } from "./pages/ImportWalletPage";
 import { BanksDirectory } from "./pages/BanksDirectory";
 import { BanksButton } from "./components/banks/BanksButton";
+import { OnexBankProvider } from "./context/OnexBankContext";
+import { OnexLandingPage } from "./pages/onex/OnexLandingPage";
+import { OnexLoginPage } from "./pages/onex/OnexLoginPage";
+import { OnexAppLayout } from "./pages/onex/OnexAppLayout";
+import { OnexDashboardPage } from "./pages/onex/OnexDashboardPage";
+import { OnexTransferPage } from "./pages/onex/OnexTransferPage";
+import { OnexSwapPage } from "./pages/onex/OnexSwapPage";
+import { OnexChainPage } from "./pages/onex/OnexChainPage";
+import { OnexCardsPage } from "./pages/onex/OnexCardsPage";
 
 function LegacyAssetDetailRedirect(): JSX.Element {
   const { chainId, symbol } = useParams();
@@ -74,11 +83,21 @@ export default function App(): JSX.Element {
   return (
     <WalletProvider>
       <ToastProvider>
+        <OnexBankProvider>
         <HashRouter>
           <>
             <AutoLockMonitor />
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/onex" element={<OnexLandingPage />} />
+              <Route path="/onex/login" element={<OnexLoginPage />} />
+              <Route path="/onex/app" element={<OnexAppLayout />}>
+                <Route index element={<OnexDashboardPage />} />
+                <Route path="transfer" element={<OnexTransferPage />} />
+                <Route path="swap" element={<OnexSwapPage />} />
+                <Route path="chain" element={<OnexChainPage />} />
+                <Route path="cards" element={<OnexCardsPage />} />
+              </Route>
               <Route path="/onboarding" element={<OnboardingPage />} />
               <Route path="/locked" element={<LockedPage />} />
               <Route path="/app/import-wallet" element={<ImportWalletPage />} />
@@ -120,6 +139,7 @@ export default function App(): JSX.Element {
             </Routes>
           </>
         </HashRouter>
+        </OnexBankProvider>
       </ToastProvider>
     </WalletProvider>
   );

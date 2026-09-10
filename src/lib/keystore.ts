@@ -39,7 +39,8 @@ export interface VaultMeta {
 }
 
 export const DEFAULT_BANKS: BankConfig[] = [
-  { id: "novabank", name: "NovaBank", url: null, initial: "N" },
+  { id: "onexbank", name: "OneX Bank Online", url: "/onex", initial: "X" },
+  { id: "novabank", name: "NovaBank", url: "https://nova-bank-api-production-7311.up.railway.app/", initial: "N" },
   { id: "anakabank", name: "AnakaBank", url: null, initial: "A" },
   { id: "zbank", name: "Z Bank", url: null, initial: "Z" },
   { id: "omnl", name: "OMNL", url: null, initial: "O" },

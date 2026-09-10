@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { hashPin, verifyPin, signToken, verifyToken, newRefreshToken, hashRefresh, rateLimitAuth, parseBearer } from "./auth.mjs";
 import { loadState, mutate } from "./store.mjs";
 import { parseUnits, formatUnits, addUnits, subUnits, decimalsFor } from "./money.mjs";
@@ -282,7 +282,7 @@ function maskCard(pan) {
 
 function issueVirtualPan() {
   // Virtual test BIN 400000 — not a live Visa product.
-  const body = Array.from({ length: 11 }, () => Math.floor(Math.random() * 10)).join("");
+  const body = Array.from({ length: 11 }, () => randomInt(10)).join("");
   const base = `400000${body}`;
   let sum = 0;
   for (let i = 0; i < 15; i++) {

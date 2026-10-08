@@ -93,8 +93,8 @@ export const CHAINS: ChainDef[] = [
     id: 22016, name: "NovaONE", slug: "novaone",
     nativeCurrency: { name: "NovaONE", symbol: "NOVA", decimals: 18, usd: 1 },
     rpcUrls: [
-      "https://novabank.uk/novaone-rpc/",
-      "https://nova-bank-api-production-7311.up.railway.app/novaone-rpc/",
+      "https://www.nova-x.io/novaone-rpc/",
+      "https://api.nova-x.io/novaone-rpc/",
     ],
     blockExplorerUrls: ["https://novabank.uk/novaone/explorer"],
     iconColor: "#5B8DEF", category: "partner", tier: "partner", isDefault: true, isInternal: false,
@@ -108,8 +108,8 @@ export const CHAINS: ChainDef[] = [
     id: 33001, name: "NRW World", slug: "nrw-world",
     nativeCurrency: { name: "NRW World", symbol: "NRW", decimals: 18, usd: 1 },
     rpcUrls: [
-      "https://novabank.uk/nrw-rpc/",
-      "https://nrw-world-chain-production-6029.up.railway.app",
+      "https://www.nova-x.io/nrw-rpc/",
+      "https://api.nova-x.io/nrw-rpc/",
     ],
     blockExplorerUrls: ["https://novabank.uk/nrw/explorer"],
     iconColor: "#A855F7", category: "partner", tier: "partner", isDefault: true, isInternal: false,
@@ -123,7 +123,8 @@ export const CHAINS: ChainDef[] = [
     id: 9001, name: "Nova Production", slug: "nova-production",
     nativeCurrency: { name: "Nova Gas", symbol: "NGAS", decimals: 18 },
     rpcUrls: [
-      "https://novabank.uk/rpc",
+      "https://www.nova-x.io/rpc",
+      "https://api.nova-x.io/rpc",
     ],
     blockExplorerUrls: ["https://novabank.uk"],
     iconColor: "#8B5CF6", category: "anaka", tier: "partner", isDefault: false, isInternal: true,
@@ -154,7 +155,8 @@ export const CHAINS: ChainDef[] = [
     id: 651940, name: "ALLTRA", slug: "alltra",
     nativeCurrency: { name: "ALLTRA", symbol: "ALL", decimals: 18 },
     rpcUrls: [
-      "https://novabank.uk/alltra-rpc/",
+      "https://www.nova-x.io/alltra-rpc/",
+      "https://api.nova-x.io/alltra-rpc/",
       "https://mainnet-rpc.alltra.global",
     ],
     blockExplorerUrls: ["https://alltra.global"],

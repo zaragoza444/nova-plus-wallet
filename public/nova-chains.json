@@ -8,9 +8,8 @@
       "name": "NovaONE",
       "nativeSymbol": "NOVA",
       "rpcUrls": [
-        "https://nova-bank-api-production-7311.up.railway.app/novaone-rpc/",
-        "https://novabank.uk/novaone-rpc/",
-        "https://novabank.uk/novaone-rpc/"
+        "https://www.nova-x.io/novaone-rpc/",
+        "https://api.nova-x.io/novaone-rpc/"
       ],
       "explorerUrl": "https://novabank.uk",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
@@ -979,9 +978,8 @@
       "name": "Nova Production Node",
       "nativeSymbol": "NOVA",
       "rpcUrls": [
-        "https://nova-bank-api-production-7311.up.railway.app/rpc",
-        "https://novabank.uk/rpc",
-        "http://novabank.uk:28545/rpc"
+        "https://www.nova-x.io/rpc",
+        "https://api.nova-x.io/rpc"
       ],
       "explorerUrl": "http://novabank.uk:28545/explorer",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
@@ -1595,8 +1593,8 @@
       "name": "NRW World Chain",
       "nativeSymbol": "NRW",
       "rpcUrls": [
-        "https://nova-bank-api-production-7311.up.railway.app/nrw-rpc/",
-        "https://novabank.uk/nrw-rpc/"
+        "https://www.nova-x.io/nrw-rpc/",
+        "https://api.nova-x.io/nrw-rpc/"
       ],
       "explorerUrl": "https://novabank.uk/",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
@@ -2565,9 +2563,8 @@
       "name": "Victoria Chain",
       "nativeSymbol": "VICTORYA",
       "rpcUrls": [
-        "https://nova-bank-api-production-7311.up.railway.app/victoria-rpc/",
-        "https://novabank.uk/victoria-rpc/",
-        "https://novabank.uk/victoria-rpc/"
+        "https://www.nova-x.io/victoria-rpc/",
+        "https://api.nova-x.io/victoria-rpc/"
       ],
       "explorerUrl": "https://novabank.uk",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",
@@ -2648,8 +2645,9 @@
       "name": "Alltra Global World",
       "nativeSymbol": "ALL",
       "rpcUrls": [
-        "https://mainnet-rpc.alltra.global",
-        "https://novabank.uk/alltra-rpc/"
+        "https://www.nova-x.io/alltra-rpc/",
+        "https://api.nova-x.io/alltra-rpc/",
+        "https://mainnet-rpc.alltra.global"
       ],
       "explorerUrl": "https://alltra.global",
       "swapRouter": "0xEd04ee8307C0656207af5afe3926Ae2380052940",

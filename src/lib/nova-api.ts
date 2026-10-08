@@ -5,9 +5,8 @@ const env = (import.meta as unknown as { env?: Record<string, string> }).env;
 export const ALLOWED_NOVA_API_HOSTS = new Set([
   "novabank.uk",
   "www.novabank.uk",
-  "novabank.uk",
-  "www.novabank.uk",
-  "nova-bank-api-production-7311.up.railway.app",
+  "api.nova-x.io",
+  "www.nova-x.io",
 ]);
 
 try {
@@ -20,8 +19,8 @@ try {
 const SAME_ORIGIN_HOSTS = new Set([
   "novabank.uk",
   "www.novabank.uk",
-  "novabank.uk",
-  "www.novabank.uk",
+  "api.nova-x.io",
+  "www.nova-x.io",
 ]);
 
 export function isAllowedNovaApiUrl(url: string): URL | null {
@@ -52,9 +51,9 @@ export function novaApiBases(): string[] {
   if (typeof window !== "undefined" && SAME_ORIGIN_HOSTS.has(window.location.hostname)) {
     bases.push(`${window.location.origin}/api/v1`);
   }
+  bases.push("https://api.nova-x.io/api/v1");
+  bases.push("https://www.nova-x.io/api/v1");
   bases.push("https://novabank.uk/api/v1");
-  bases.push("https://novabank.uk/api/v1");
-  bases.push("https://nova-bank-api-production-7311.up.railway.app/api/v1");
   return [...new Set(bases)];
 }
 

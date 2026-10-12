@@ -19,7 +19,7 @@ export function AssetList(): JSX.Element {
     (r) => ASSET_SYMBOLS.has(r.token.symbol) && BigInt(r.balance) > 0n,
   );
 
-  if (!address) return <EmptyState title="Wallet locked" description="Unlock Signet to view tokenised assets." />;
+  if (!address) return <EmptyState title="Wallet locked" description="Unlock Nova+ to view tokenised assets." />;
 
   if (loading && !tokenRows.length) {
     return <TokenListSkeleton rows={4} />;

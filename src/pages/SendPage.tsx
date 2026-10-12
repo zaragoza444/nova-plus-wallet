@@ -407,7 +407,7 @@ export function SendPage(): JSX.Element {
             </div>
 
             <p className="text-[11px] text-center text-signet-muted">
-              Verify every field. Signet will never ask for your recovery phrase or private key.
+              Verify every field. Nova+ will never ask for your recovery phrase or private key.
             </p>
 
             <div className="flex gap-3">

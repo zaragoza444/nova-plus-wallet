@@ -32,7 +32,7 @@ export function LandingPage(): JSX.Element {
             to={paths.home}
             className="btn-primary inline-flex min-w-[200px] justify-center px-10 text-base no-underline shadow-gold-md"
           >
-            Open Nova Plus Wallet
+            Open Nova+
           </Link>
           <div className="flex flex-wrap justify-center gap-2">
             <Link

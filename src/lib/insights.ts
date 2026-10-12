@@ -42,6 +42,6 @@ export const INSIGHTS = {
   },
   chart: {
     title: "Live market data only",
-    body: "Charts require a CoinGecko feed. Signet never renders synthetic price history.",
+    body: "Charts require a CoinGecko feed. Nova+ never renders synthetic price history.",
   },
 } as const;

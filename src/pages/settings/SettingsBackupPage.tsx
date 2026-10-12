@@ -26,7 +26,7 @@ export function SettingsBackupPage(): JSX.Element {
           <ul className="list-inside list-disc space-y-1 text-xs">
             <li>Write the phrase on paper and store it offline in a secure place.</li>
             <li>Do not email, cloud-sync, or screenshot your phrase.</li>
-            <li>Signet never uploads your keys — backup is your responsibility.</li>
+            <li>Nova+ never uploads your keys — backup is your responsibility.</li>
           </ul>
           <RecoveryPhraseReveal lockAfterDismiss onLock={lock} />
         </div>

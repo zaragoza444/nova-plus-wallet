@@ -38,7 +38,7 @@ export function SettingsDisplayPage(): JSX.Element {
     <div className="space-y-6">
       <div>
         <h3 className="font-heading text-base font-semibold text-signet-text">Display</h3>
-        <p className="mt-1 text-xs text-signet-muted">How portfolio values appear across Signet.</p>
+        <p className="mt-1 text-xs text-signet-muted">How portfolio values appear across Nova+.</p>
       </div>
 
       <SettingsSection title="Currency" hint="Values are priced in USD internally, then converted for display.">

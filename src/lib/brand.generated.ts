@@ -5,6 +5,6 @@ export const brandAssets = {
   "wordmarkUrl": "/brand/wordmark.svg",
   "fonts": [],
   "tagline": "Self-custody wallet for Nova Bank and the Nova mesh",
-  "productName": "Nova Plus Wallet",
+  "productName": "Nova+",
   "syncedAt": "2026-07-07T10:45:00.000Z"
 } as const;

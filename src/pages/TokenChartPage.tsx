@@ -82,14 +82,14 @@ export function TokenChartPage(): JSX.Element {
         <EmptyState
           icon="📈"
           title="No price history yet"
-          description="This token has no CoinGecko feed. Signet does not show synthetic chart data."
+          description="This token has no CoinGecko feed. Nova+ does not show synthetic chart data."
         />
       ) : loading ? (
         <CardSkeleton lines={4} />
       ) : failed || !chartData.length ? (
         <ErrorState
           title="Chart unavailable"
-          description="CoinGecko returned no market data for this token. Signet does not synthesise fake candles."
+          description="CoinGecko returned no market data for this token. Nova+ does not synthesise fake candles."
           onRetry={load}
         />
       ) : (

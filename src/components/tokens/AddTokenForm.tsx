@@ -54,7 +54,7 @@ export function AddTokenForm(): JSX.Element {
     <div className="glass-card space-y-3 p-4">
       <h3 className="font-heading text-sm font-semibold text-signet-text">Add token by address</h3>
       <p className="text-xs text-signet-muted">
-        Signet reads symbol(), name(), and decimals() from the contract. Addresses with no bytecode (getCode === &quot;0x&quot;) are rejected.
+        Nova+ reads symbol(), name(), and decimals() from the contract. Addresses with no bytecode (getCode === &quot;0x&quot;) are rejected.
       </p>
       <label className="block space-y-1">
         <span className="text-[11px] font-medium text-signet-muted">Network</span>

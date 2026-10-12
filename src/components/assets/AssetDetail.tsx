@@ -134,7 +134,7 @@ export function AssetDetail(): JSX.Element {
       <PageShell width="lg">
         <EmptyState
           title="Token not found"
-          description="This asset is not in the Signet registry for the requested chain and symbol."
+          description="This asset is not in the Nova+ registry for the requested chain and symbol."
           action={{ label: "Back to assets", to: paths.assets }}
         />
       </PageShell>

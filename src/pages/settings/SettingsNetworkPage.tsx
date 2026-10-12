@@ -188,7 +188,7 @@ export function SettingsNetworkPage(): JSX.Element {
       <div>
         <h3 className="font-heading text-lg font-semibold text-signet-text">Network</h3>
         <p className="mt-1 text-sm text-signet-muted">
-          Choose which chains Signet reads balances from. Banking layers require Private Access.
+          Choose which chains Nova+ reads balances from. Banking layers require Private Access.
         </p>
       </div>
 

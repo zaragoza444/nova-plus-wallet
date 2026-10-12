@@ -16,5 +16,5 @@ export function brandTagline(): string {
 }
 
 export function brandProductName(): string {
-  return brand.productName ?? "Nova Plus Wallet";
+  return brand.productName ?? "Nova+";
 }

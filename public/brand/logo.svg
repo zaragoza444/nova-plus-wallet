@@ -1,4 +1,4 @@
-<svg viewBox="0 0 280 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Signet">
+<svg viewBox="0 0 280 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nova+">
   <defs>
     <linearGradient id="sg" x1="0" y1="0" x2="280" y2="72" gradientUnits="userSpaceOnUse">
       <stop stop-color="#C9A84C"/>
@@ -13,5 +13,5 @@
   <circle cx="36" cy="36" r="34" fill="url(#seal)" stroke="url(#sg)" stroke-width="1.5"/>
   <circle cx="36" cy="36" r="27" fill="none" stroke="url(#sg)" stroke-width="0.75" opacity="0.5"/>
   <path d="M36 16l11 11-11 11-11-11 11-11z" fill="url(#sg)"/>
-  <text x="88" y="46" fill="url(#sg)" font-family="'Playfair Display', Georgia, serif" font-size="34" font-weight="600" letter-spacing="0.04em">Signet</text>
+  <text x="88" y="46" fill="url(#sg)" font-family="'Playfair Display', Georgia, serif" font-size="34" font-weight="600" letter-spacing="0.04em">Nova+</text>
 </svg>

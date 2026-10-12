@@ -1,6 +1,6 @@
 {
-  "name": "Nova Plus Wallet",
-  "short_name": "Nova Plus",
+  "name": "Nova+",
+  "short_name": "Nova+",
   "description": "Self-custody multi-chain wallet for Nova Bank",
   "start_url": "./",
   "display": "standalone",

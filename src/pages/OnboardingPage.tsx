@@ -62,7 +62,7 @@ export function OnboardingPage(): JSX.Element {
         {step === "accountType" && (
           <div className="text-center">
             <SignetLogo variant="mark" className="mx-auto mb-5 h-14 w-14" />
-            <h1 className="font-display text-2xl font-semibold tracking-wide gold-text">Welcome to Signet</h1>
+            <h1 className="font-display text-2xl font-semibold tracking-wide gold-text">Welcome to Nova+</h1>
             <p className="mb-8 mt-2 text-sm text-signet-muted">Choose how you'll use this wallet.</p>
             <div className="space-y-3 text-left">
               <button

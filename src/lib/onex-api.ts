@@ -9,6 +9,8 @@ export const ALLOWED_ONEX_API_HOSTS = new Set([
   "127.0.0.1",
   "novabank.uk",
   "www.novabank.uk",
+  "www.nova-x.io",
+  "api.nova-x.io",
   "nova-bank-api-production-7311.up.railway.app",
 ]);
 
@@ -49,6 +51,8 @@ export function onexApiBases(): string[] {
   if (typeof window !== "undefined") {
     bases.push(`${window.location.origin}/api/v1`);
   }
+  bases.push("https://www.nova-x.io/api/v1");
+  bases.push("https://api.nova-x.io/api/v1");
   bases.push("http://127.0.0.1:8090/api/v1");
   return [...new Set(bases)];
 }

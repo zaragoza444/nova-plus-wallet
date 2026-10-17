@@ -76,22 +76,24 @@ export function SwapPage(): JSX.Element {
   );
 
   useEffect(() => {
-    setSwapChainId((prev) => {
-      if (isSettlementMetaChain(prev) && enabledIds.includes(prev)) return prev;
-      if (isOneInchSwapAvailable(prev) && enabledIds.includes(prev)) return prev;
-      return defaultSwapChain(chainId, enabledIds);
-    });
-  }, [chainId, enabledIds]);
-
-  useEffect(() => {
-    const cid = Number(searchParams.get("chainId"));
+    const requested = Number(searchParams.get("chainId"));
     const tokenAddr = searchParams.get("token");
-    if (Number.isFinite(cid) && (isOneInchSwapAvailable(cid) || isSettlementMetaChain(cid))) {
-      setSwapChainId(cid);
-      setChainId(cid);
+    const requestedOk =
+      Number.isFinite(requested) &&
+      enabledIds.includes(requested) &&
+      (isSettlementMetaChain(requested) || isOneInchSwapAvailable(requested));
+    if (requestedOk) {
+      setSwapChainId(requested);
+      setChainId(requested);
+    } else {
+      setSwapChainId((prev) => {
+        if (isSettlementMetaChain(prev) && enabledIds.includes(prev)) return prev;
+        if (isOneInchSwapAvailable(prev) && enabledIds.includes(prev)) return prev;
+        return defaultSwapChain(chainId, enabledIds);
+      });
     }
     if (tokenAddr) setFromAddr(tokenAddr);
-  }, [searchParams, setChainId]);
+  }, [chainId, enabledIds, searchParams, setChainId]);
 
   useEffect(() => {
     if (!tokens.length) {

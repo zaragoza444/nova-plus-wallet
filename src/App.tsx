@@ -1,11 +1,15 @@
-import { HashRouter, Navigate, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { HashRouter, Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { WalletProvider, useWalletContext } from "./context/WalletContext";
 import { ToastProvider } from "./context/ToastContext";
 import { Header } from "./components/layout/Header";
 import { MobileNav } from "./components/layout/MobileNav";
 import { ToastViewport } from "./components/common/ToastViewport";
-import { paths, assetDetail } from "./lib/routes";
+import { paths, assetDetail, appReturnPath } from "./lib/routes";
 import { LandingPage } from "./pages/LandingPage";
+import { CompanyLayout } from "./pages/company/CompanyLayout";
+import { CompanyHome } from "./pages/company/CompanyHome";
+import { CompanyAbout } from "./pages/company/CompanyAbout";
+import { CompanyContact } from "./pages/company/CompanyContact";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { Dashboard } from "./pages/Dashboard";
 import { Tokens } from "./pages/Tokens";
@@ -59,8 +63,10 @@ function LegacySettingsRedirect(): JSX.Element {
 // Gate every /app route on a real, unlocked wallet.
 function RequireWallet({ children }: { children: JSX.Element }): JSX.Element {
   const { status } = useWalletContext();
-  if (status === "no-wallet" || status === "watch-only") return <Navigate to="/onboarding" replace />;
-  if (status === "locked") return <Navigate to="/locked" replace />;
+  const location = useLocation();
+  const next = encodeURIComponent(appReturnPath(`${location.pathname}${location.search}`));
+  if (status === "no-wallet" || status === "watch-only") return <Navigate to={`/onboarding?next=${next}`} replace />;
+  if (status === "locked") return <Navigate to={`/locked?next=${next}`} replace />;
   return children;
 }
 
@@ -88,7 +94,12 @@ export default function App(): JSX.Element {
           <>
             <AutoLockMonitor />
             <Routes>
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<CompanyLayout />}>
+                <Route index element={<CompanyHome />} />
+                <Route path="company" element={<CompanyAbout />} />
+                <Route path="contact" element={<CompanyContact />} />
+              </Route>
+              <Route path="/plus" element={<LandingPage />} />
               <Route path="/onex" element={<OnexLandingPage />} />
               <Route path="/onex/login" element={<OnexLoginPage />} />
               <Route path="/onex/app" element={<OnexAppLayout />}>

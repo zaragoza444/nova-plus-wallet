@@ -1,4 +1,8 @@
 export const paths = {
+  company: "/",
+  companyAbout: "/company",
+  companyContact: "/contact",
+  plus: "/plus",
   home: "/app",
   tokens: "/app/tokens",
   assets: "/app/assets",
@@ -43,6 +47,14 @@ export function sendWithToken(chainId: number, symbol: string, to?: string): str
 export function receiveOnChain(chainId: number): string {
   return `${paths.receive}?chainId=${chainId}`;
 }
+/** Only in-app paths may be used as a post-login return target. */
+export function appReturnPath(next: string | null | undefined): string {
+  if (!next) return paths.home;
+  if (next !== "/app" && !next.startsWith("/app/") && !next.startsWith("/app?")) return paths.home;
+  if (next.startsWith("//") || next.includes("://") || next.includes("\\")) return paths.home;
+  return next;
+}
+
 export function swapWithToken(chainId: number, symbol: string, tokenAddress?: string): string {
   const q = new URLSearchParams({ chainId: String(chainId), symbol });
   if (tokenAddress) q.set("token", tokenAddress);

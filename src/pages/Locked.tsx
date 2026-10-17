@@ -1,24 +1,26 @@
 // Signet — Locked screen (real). Decrypt the vault with the password to unlock.
 import { useState, useCallback } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useWalletContext } from "../context/WalletContext";
-import { paths } from "../lib/routes";
+import { appReturnPath } from "../lib/routes";
 import { SignetLogo } from "../components/layout/SignetLogo";
 
 const goldBg = { background: "linear-gradient(135deg,#C9A84C,#E8D48B)" };
 
 export function LockedPage(): JSX.Element {
   const nav = useNavigate();
+  const [searchParams] = useSearchParams();
+  const dest = appReturnPath(searchParams.get("next"));
   const { unlock, status } = useWalletContext();
   const [pw, setPw] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
   if (status === "unlocked") {
-    return <Navigate to={paths.home} replace />;
+    return <Navigate to={dest} replace />;
   }
   if (status === "no-wallet") {
-    return <Navigate to="/onboarding" replace />;
+    return <Navigate to={`/onboarding?next=${encodeURIComponent(dest)}`} replace />;
   }
 
   const submit = useCallback(async () => {
@@ -26,13 +28,13 @@ export function LockedPage(): JSX.Element {
     setBusy(true);
     try {
       await unlock(pw);
-      nav(paths.home, { replace: true });
+      nav(dest, { replace: true });
     } catch {
       setErr("Wrong password.");
       setBusy(false);
       setPw("");
     }
-  }, [pw, unlock, nav]);
+  }, [pw, unlock, nav, dest]);
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-signet-bg px-6 text-center text-signet-ink">

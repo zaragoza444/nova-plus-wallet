@@ -1,4 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
+import { NOVA_PRODUCT_CONTACT_EMAIL } from "../../lib/brand";
 import { paths } from "../../lib/routes";
 import { useOnexBank } from "../../context/OnexBankContext";
 
@@ -21,12 +22,18 @@ export function OnexLandingPage(): JSX.Element {
           <p className="max-w-xl text-sm leading-relaxed text-signet-muted">
             Member banking with ledger wallets, virtual cards, and settlement on OneX Chain (eip155:138) — the same product surface as Nova Online Bank.
           </p>
+          <p className="text-xs text-signet-muted">
+            Nova X ·{" "}
+            <a className="text-signet-gold" href={`mailto:${NOVA_PRODUCT_CONTACT_EMAIL}`}>
+              {NOVA_PRODUCT_CONTACT_EMAIL}
+            </a>
+          </p>
           <div className="flex flex-wrap gap-3">
             <Link to={paths.onexLogin} className="btn-primary px-8 no-underline">
               Open OneX Bank
             </Link>
             <Link to="/" className="btn-secondary no-underline">
-              Nova Plus Wallet
+              Nova Trusty
             </Link>
           </div>
           <div className="flex flex-wrap gap-2 pt-2">

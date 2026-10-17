@@ -20,6 +20,9 @@ export function LandingPage(): JSX.Element {
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-signet-bg px-6 py-10 text-center text-signet-ink grain-overlay">
       <div className="reveal w-full max-w-md">
         <div className="mb-6">
+          <Link to={paths.company} className="mb-4 inline-block text-[11px] font-medium text-signet-gold no-underline">
+            Nova Trusty
+          </Link>
           <SignetLogo variant="mark" className="mx-auto mb-4 h-16 w-16" />
           <h1 className="font-display text-4xl font-semibold tracking-wide gold-text">{name}</h1>
         </div>
@@ -62,7 +65,7 @@ export function LandingPage(): JSX.Element {
           </div>
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
-          {["NovaONE", "NRW", "OneX", "ALLTRA", "ETH · BNB · TRX"].map((c) => (
+          {["NovaONE 22016", "NRW 33001", "OneX", "ALLTRA", "ETH · BNB · TRX"].map((c) => (
             <span
               key={c}
               className="rounded-full border border-signet-border-glow bg-signet-surface/80 px-3 py-1 text-[11px] text-signet-muted"

@@ -18,3 +18,6 @@ export function brandTagline(): string {
 export function brandProductName(): string {
   return brand.productName ?? "Nova+";
 }
+
+/** Public contact for Nova X, Nova+, Nova Bridge, and Nova Swap. */
+export const NOVA_PRODUCT_CONTACT_EMAIL = "info@novatrust.uk";

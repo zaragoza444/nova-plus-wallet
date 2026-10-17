@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
-import { useNavigate, Link, Navigate } from "react-router-dom";
+import { useNavigate, Link, Navigate, useSearchParams } from "react-router-dom";
 import { useWalletContext } from "../context/WalletContext";
 import type { AccountType } from "../lib/keystore";
-import { paths } from "../lib/routes";
+import { appReturnPath } from "../lib/routes";
 import { SignetLogo } from "../components/layout/SignetLogo";
 
 type Step = "accountType" | "mode" | "reveal" | "password";
@@ -15,6 +15,8 @@ const burgundyBtn = `${primaryBtn} bg-signet-burgundy text-white shadow-burgundy
 
 export function OnboardingPage(): JSX.Element {
   const nav = useNavigate();
+  const [searchParams] = useSearchParams();
+  const dest = appReturnPath(searchParams.get("next"));
   const { beginCreate, finalizeCreate, status } = useWalletContext();
   const [step, setStep] = useState<Step>("accountType");
   const [accountType, setAccountType] = useState<AccountType>("personal");
@@ -40,17 +42,17 @@ export function OnboardingPage(): JSX.Element {
     setBusy(true);
     try {
       await finalizeCreate(loginPw, undefined, { accountType });
-      nav(paths.home, { replace: true });
+      nav(dest, { replace: true });
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Couldn't create wallet.");
       setBusy(false);
     }
-  }, [loginPw, loginPw2, accountType, finalizeCreate, nav]);
+  }, [loginPw, loginPw2, accountType, finalizeCreate, nav, dest]);
 
   const words = mnemonic.split(" ");
 
   if (status === "unlocked") {
-    return <Navigate to={paths.home} replace />;
+    return <Navigate to={dest} replace />;
   }
   if (status === "locked") {
     return <Navigate to="/locked" replace />;

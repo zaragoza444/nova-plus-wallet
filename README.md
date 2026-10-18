@@ -19,3 +19,9 @@ Open `#/onex` for OneX Bank. Vite proxies `/api/v1` to the local API.
 ```bash
 npm run test:onex
 ```
+
+## Nova Online Bank
+
+The wallet member surface for the live Nova Online Bank API is at `#/nova` (sign-in, accounts, transfer, exchange, cards). Balances and transfers are production funds.
+
+The browser calls a same-origin `/nova-api` proxy in `npm run dev` and `npm start`. On `novabank.uk` the client calls the bank API directly. Set `VITE_NOVA_BANK_API_URL` only to an allowlisted HTTPS host (`nova-bank-api-production-7311.up.railway.app`, `api.nova-x.io`, or `www.nova-x.io`). GitHub Pages cannot proxy; that host works when the page origin is allowlisted by the bank.

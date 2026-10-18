@@ -25,6 +25,12 @@ export default defineConfig({
     proxy: {
       "/api/v1": { target: "https://www.nova-x.io", changeOrigin: true, secure: true },
       "/onex-rpc": { target: "https://www.nova-x.io", changeOrigin: true, secure: true },
+      "/nova-api": {
+        target: "https://nova-bank-api-production-7311.up.railway.app",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => (path.startsWith("/v1") ? `/api${path}` : path.replace(/^\/nova-api/, "/api")),
+      },
     },
   },
 });

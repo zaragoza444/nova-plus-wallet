@@ -41,6 +41,7 @@ import { ImportWalletPage } from "./pages/ImportWalletPage";
 import { BanksDirectory } from "./pages/BanksDirectory";
 import { BanksButton } from "./components/banks/BanksButton";
 import { OnexBankProvider } from "./context/OnexBankContext";
+import { NovaBankProvider } from "./context/NovaBankContext";
 import { OnexLandingPage } from "./pages/onex/OnexLandingPage";
 import { OnexLoginPage } from "./pages/onex/OnexLoginPage";
 import { OnexAppLayout } from "./pages/onex/OnexAppLayout";
@@ -49,6 +50,13 @@ import { OnexTransferPage } from "./pages/onex/OnexTransferPage";
 import { OnexSwapPage } from "./pages/onex/OnexSwapPage";
 import { OnexChainPage } from "./pages/onex/OnexChainPage";
 import { OnexCardsPage } from "./pages/onex/OnexCardsPage";
+import { NovaLandingPage } from "./pages/nova/NovaLandingPage";
+import { NovaLoginPage } from "./pages/nova/NovaLoginPage";
+import { NovaAppLayout } from "./pages/nova/NovaAppLayout";
+import { NovaDashboardPage } from "./pages/nova/NovaDashboardPage";
+import { NovaTransferPage } from "./pages/nova/NovaTransferPage";
+import { NovaSwapPage } from "./pages/nova/NovaSwapPage";
+import { NovaCardsPage } from "./pages/nova/NovaCardsPage";
 
 function LegacyAssetDetailRedirect(): JSX.Element {
   const { chainId, symbol } = useParams();
@@ -90,6 +98,7 @@ export default function App(): JSX.Element {
     <WalletProvider>
       <ToastProvider>
         <OnexBankProvider>
+        <NovaBankProvider>
         <HashRouter>
           <>
             <AutoLockMonitor />
@@ -102,6 +111,14 @@ export default function App(): JSX.Element {
               <Route path="/plus" element={<LandingPage />} />
               <Route path="/onex" element={<OnexLandingPage />} />
               <Route path="/onex/login" element={<OnexLoginPage />} />
+              <Route path="/nova" element={<NovaLandingPage />} />
+              <Route path="/nova/login" element={<NovaLoginPage />} />
+              <Route path="/nova/app" element={<NovaAppLayout />}>
+                <Route index element={<NovaDashboardPage />} />
+                <Route path="transfer" element={<NovaTransferPage />} />
+                <Route path="swap" element={<NovaSwapPage />} />
+                <Route path="cards" element={<NovaCardsPage />} />
+              </Route>
               <Route path="/onex/app" element={<OnexAppLayout />}>
                 <Route index element={<OnexDashboardPage />} />
                 <Route path="transfer" element={<OnexTransferPage />} />
@@ -150,6 +167,7 @@ export default function App(): JSX.Element {
             </Routes>
           </>
         </HashRouter>
+        </NovaBankProvider>
         </OnexBankProvider>
       </ToastProvider>
     </WalletProvider>

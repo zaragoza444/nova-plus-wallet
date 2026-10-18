@@ -32,6 +32,12 @@ export const paths = {
   onexSwap: "/onex/app/swap",
   onexChain: "/onex/app/chain",
   onexCards: "/onex/app/cards",
+  nova: "/nova",
+  novaLogin: "/nova/login",
+  novaApp: "/nova/app",
+  novaTransfer: "/nova/app/transfer",
+  novaSwap: "/nova/app/swap",
+  novaCards: "/nova/app/cards",
 };
 export function assetDetail(chainId: number, symbol: string): string {
   return `/app/assets/${chainId}/${encodeURIComponent(symbol)}`;

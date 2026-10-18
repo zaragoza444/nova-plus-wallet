@@ -40,6 +40,7 @@ function BankRow({ bank }: { bank: BankConfig }): JSX.Element {
         <div>
           <p className="text-sm font-semibold text-signet-text">{bank.name}</p>
           {bank.id === "onexbank" && <p className="text-xs text-signet-muted">Live · same rails as Nova Online Bank</p>}
+          {bank.id === "novabank" && <p className="text-xs text-signet-muted">Live · Nova Online Bank</p>}
         </div>
       </div>
       <span className="text-signet-burgundy-bright">→</span>
